@@ -15,6 +15,8 @@
 		1D24B6882571A0B800E7B8AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D24B6722571A0B800E7B8AC /* Assets.xcassets */; };
 		1D24B6982571A10A00E7B8AC /* FlowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D24B6972571A10A00E7B8AC /* FlowerView.swift */; };
 		1D24B6992571A10A00E7B8AC /* FlowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D24B6972571A10A00E7B8AC /* FlowerView.swift */; };
+		1D24B69F2571AB1D00E7B8AC /* PolygonShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D24B69E2571AB1D00E7B8AC /* PolygonShape.swift */; };
+		1D24B6A02571AB1D00E7B8AC /* PolygonShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D24B69E2571AB1D00E7B8AC /* PolygonShape.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +29,7 @@
 		1D24B6812571A0B800E7B8AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1D24B6822571A0B800E7B8AC /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		1D24B6972571A10A00E7B8AC /* FlowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowerView.swift; sourceTree = "<group>"; };
+		1D24B69E2571AB1D00E7B8AC /* PolygonShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonShape.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +67,7 @@
 				1D24B6712571A0B600E7B8AC /* ContentView.swift */,
 				1D24B6972571A10A00E7B8AC /* FlowerView.swift */,
 				1D24B6722571A0B800E7B8AC /* Assets.xcassets */,
+				1D24B69E2571AB1D00E7B8AC /* PolygonShape.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -193,6 +197,7 @@
 			files = (
 				1D24B6852571A0B800E7B8AC /* ContentView.swift in Sources */,
 				1D24B6982571A10A00E7B8AC /* FlowerView.swift in Sources */,
+				1D24B69F2571AB1D00E7B8AC /* PolygonShape.swift in Sources */,
 				1D24B6832571A0B800E7B8AC /* BestagonsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -203,6 +208,7 @@
 			files = (
 				1D24B6862571A0B800E7B8AC /* ContentView.swift in Sources */,
 				1D24B6992571A10A00E7B8AC /* FlowerView.swift in Sources */,
+				1D24B6A02571AB1D00E7B8AC /* PolygonShape.swift in Sources */,
 				1D24B6842571A0B800E7B8AC /* BestagonsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
