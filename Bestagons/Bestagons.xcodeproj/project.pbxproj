@@ -17,6 +17,8 @@
 		1D24B6992571A10A00E7B8AC /* FlowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D24B6972571A10A00E7B8AC /* FlowerView.swift */; };
 		1D24B69F2571AB1D00E7B8AC /* PolygonShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D24B69E2571AB1D00E7B8AC /* PolygonShape.swift */; };
 		1D24B6A02571AB1D00E7B8AC /* PolygonShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D24B69E2571AB1D00E7B8AC /* PolygonShape.swift */; };
+		1D24B6A42574BD5700E7B8AC /* PortraitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D24B6A32574BD5700E7B8AC /* PortraitView.swift */; };
+		1D24B6A52574BD5700E7B8AC /* PortraitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D24B6A32574BD5700E7B8AC /* PortraitView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,7 @@
 		1D24B6822571A0B800E7B8AC /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		1D24B6972571A10A00E7B8AC /* FlowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowerView.swift; sourceTree = "<group>"; };
 		1D24B69E2571AB1D00E7B8AC /* PolygonShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonShape.swift; sourceTree = "<group>"; };
+		1D24B6A32574BD5700E7B8AC /* PortraitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortraitView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +71,7 @@
 				1D24B6972571A10A00E7B8AC /* FlowerView.swift */,
 				1D24B6722571A0B800E7B8AC /* Assets.xcassets */,
 				1D24B69E2571AB1D00E7B8AC /* PolygonShape.swift */,
+				1D24B6A32574BD5700E7B8AC /* PortraitView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -198,6 +202,7 @@
 				1D24B6852571A0B800E7B8AC /* ContentView.swift in Sources */,
 				1D24B6982571A10A00E7B8AC /* FlowerView.swift in Sources */,
 				1D24B69F2571AB1D00E7B8AC /* PolygonShape.swift in Sources */,
+				1D24B6A42574BD5700E7B8AC /* PortraitView.swift in Sources */,
 				1D24B6832571A0B800E7B8AC /* BestagonsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -209,6 +214,7 @@
 				1D24B6862571A0B800E7B8AC /* ContentView.swift in Sources */,
 				1D24B6992571A10A00E7B8AC /* FlowerView.swift in Sources */,
 				1D24B6A02571AB1D00E7B8AC /* PolygonShape.swift in Sources */,
+				1D24B6A52574BD5700E7B8AC /* PortraitView.swift in Sources */,
 				1D24B6842571A0B800E7B8AC /* BestagonsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
