@@ -10,7 +10,7 @@ import SwiftUI
 struct FlowerView: View {
 	@State private var flowerOut = false
 
-	var sides = 6	
+	var sides = 6
 	
 	var flower: some View {
 		ZStack {
