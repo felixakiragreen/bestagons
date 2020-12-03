@@ -16,6 +16,7 @@ struct BestagonsApp: App {
     }
 }
 
+// Actually, maybe I should remove since I'm not using anymore?
 // Copied from https://www.raywenderlich.com/7589178-how-to-create-a-neumorphic-design-with-swiftui#toc-anchor-012
 extension View {
 	// Define a new inverseMask that mimics mask
