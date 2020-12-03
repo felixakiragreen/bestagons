@@ -14,13 +14,13 @@ struct HexagonShapeView: View {
 	var body: some View {
 		VStack {
 			HStack {
-				ManualHexagon(fill: Color("blue.400"))
-				RegularHexagon(fill: Color("orange.400"))
-				StretchyHexagon(fill: Color("purple.400"), trunk: 0)
-				StretchyHexagon(fill: Color("green.400"), trunk: .infinity)
+//				ManualHexagon(fill: Color("blue.400"))
+//				RegularHexagon(fill: Color("orange.400"))
+//				StretchyHexagon(fill: Color("purple.400"), trunk: 0)
+//				StretchyHexagon(fill: Color("green.400"), trunk: .infinity)
 			}
 			HStack {
-				ManualHexagonalRightBevel()
+//				ManualHexagonalRightBevel()
 			}
 		}
 	}
@@ -103,12 +103,12 @@ struct RegularHexagon: View {
 		GeometryReader { geometry in
 			let center = min(geometry.size.width, geometry.size.height) / 2
 			let side = center / sin(α)
-			let tip = side / 2
+//			let tip = side / 2
 
 			HexagonalShape(
 				offset: .zero,
 				center: center,
-				tip: tip,
+//				tip: tip,
 				trunk: side
 			)
 			.fill(fill)
@@ -124,13 +124,13 @@ struct StretchyHexagon: View {
 		GeometryReader { geometry in
 			let center = min(geometry.size.width, geometry.size.height) / 2
 			let side = center / sin(α)
-			let tip = side / 2
+//			let tip = side / 2
 			let trunkHeight = trunk ?? side
 
 			HexagonalShape(
 				offset: .zero,
 				center: center,
-				tip: tip,
+//				tip: tip,
 				trunk: trunkHeight == .infinity
 					? geometry.size.height - side // stretch to fill available space
 					: trunkHeight
@@ -143,19 +143,22 @@ struct StretchyHexagon: View {
 struct HexagonalShape: Shape {
 	let offset: CGPoint
 	let center: CGFloat // midline, on X axis for vertical hexagons
-	let tip: CGFloat // height of tip (half of side length)
+	// let tip: CGFloat? = nil // height of tip (half of side length)
 	let trunk: CGFloat // regularly the length of a side, but specificying 0 makes a diamond
 
 	func path(in rect: CGRect) -> Path {
 		var p = Path()
+		let tip = center / sin(α) / 2
+		let topTip = tip
+		let botTip = tip
 
 		p.addLines([
 			CGPoint(x: offset.x + center, y: offset.y), // top
-			CGPoint(x: offset.x + center * 2, y: offset.y + tip), // top right
-			CGPoint(x: offset.x + center * 2, y: offset.y + tip + trunk), // bot right
-			CGPoint(x: offset.x + center, y: offset.y + tip + trunk + tip), // bot
-			CGPoint(x: offset.x, y: offset.y + tip + trunk), // bot left
-			CGPoint(x: offset.x, y: offset.y + tip) // top left
+			CGPoint(x: offset.x + center * 2, y: offset.y + topTip), // top right
+			CGPoint(x: offset.x + center * 2, y: offset.y + botTip + trunk), // bot right
+			CGPoint(x: offset.x + center, y: offset.y + topTip + trunk + botTip), // bot
+			CGPoint(x: offset.x, y: offset.y + botTip + trunk), // bot left
+			CGPoint(x: offset.x, y: offset.y + botTip) // top left
 		])
 
 		return p
