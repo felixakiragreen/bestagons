@@ -7,32 +7,27 @@
 
 import SwiftUI
 
-/*
-FOLLOW UP:
-- make a "diamond" shape (for the chest, hair)
-- add the shadow
-- add sliders for the other fractions
-*/
-
 struct PortraitView: View {
 	// MARK: - PROPERTIES
 
 	@State var animationTimeIsForward = true
 	@State var animationDuration = 3.0
 
-	@State var bgVisible = false
+	let initialVisible = true
+	
+	@State var bgVisible = true
 	var bgDelayFraction = 0.0
 	var bgDurationFraction = 1.0
 
-	@State var headVisible = false
+	@State var headVisible = true
 	var headDelayFraction = 0.5
 	var headDurationFraction = 1.0
 
-	@State var chestVisible = false
+	@State var chestVisible = true
 	var chestDelayFraction = 1.0
 	var chestDurationFraction = 1.0
 
-	@State var hairVisible = false
+	@State var hairVisible = true
 	var hairDelayFraction = 1.5
 	var hairDurationFraction = 1.0
 
@@ -48,6 +43,7 @@ struct PortraitView: View {
 
 		return ZStack {
 			Color.black.edgesIgnoringSafeArea(.all)
+
 
 			HStack {
 				VStack(spacing: 16) {
@@ -113,21 +109,21 @@ struct PortraitView: View {
 				} //: LEFT
 				.padding(.horizontal, 16.0)
 
-				GeometryReader { proxy in
+				GeometryReader { geometry in
 					ZStack {
 						Background(visible: bgVisible)
 
-						Chest(proxy: proxy, visible: chestVisible)
+						Chest(size: geometry.size, visible: chestVisible)
 
-						Bun(proxy: proxy, visible: hairVisible)
+						Bun(size: geometry.size, visible: hairVisible)
 
-						Head(proxy: proxy, visible: headVisible)
+						Head(size: geometry.size, visible: headVisible)
 
-						Hairline(proxy: proxy, visible: hairVisible)
+						Hairline(size: geometry.size, visible: hairVisible)
 					} //: ZSTACK
 					.frame(maxWidth: .infinity, maxHeight: .infinity)
 				} //: RIGHT
-				.frame(width: 320, height: 320)
+				.aspectRatio(1, contentMode: .fit)
 				.padding(40)
 			}
 		}
@@ -159,14 +155,14 @@ struct Background: View {
 }
 
 struct Head: View {
-	let proxy: GeometryProxy
+	let size: CGSize
 	let visible: Bool
 
 	var body: some View {
 		PolygonShape(sides: 6)
 			.frame(
-				maxWidth: visible ? proxy.size.width * 12 / 24 : 0,
-				maxHeight: visible ? proxy.size.height * 12 / 24 : 0,
+				maxWidth: visible ? size.width * 12 / 24 : 0,
+				maxHeight: visible ? size.height * 12 / 24 : 0,
 				alignment: .center
 			)
 			.foregroundColor(Color("grey.100"))
@@ -174,7 +170,7 @@ struct Head: View {
 }
 
 struct Chest: View {
-	let proxy: GeometryProxy
+	let size: CGSize
 	let visible: Bool
 
 	var body: some View {
@@ -182,73 +178,70 @@ struct Chest: View {
 			// SHIRT
 			PolygonShape(sides: 6)
 				.frame(
-					maxWidth: proxy.size.width,
-					maxHeight: proxy.size.height,
+					maxWidth: size.width,
+					maxHeight: size.height,
 					alignment: .center
 				)
 				.foregroundColor(Color("grey.900"))
-				.offset(y: proxy.size.height * 0.6)
+				.offset(y: size.height * 0.6)
 				.clipShape(PolygonShape(sides: 6))
 
 			// BODY
 			PolygonShape(sides: 6)
 				.frame(
-					maxWidth: proxy.size.width,
-					maxHeight: proxy.size.height,
+					maxWidth: size.width,
+					maxHeight: size.height,
 					alignment: .center
 				)
 				.foregroundColor(Color("grey.200"))
-				.offset(y: -(proxy.size.height * 4 / 24))
+				.offset(y: -(size.height * 4 / 24))
 				.mask(
 					PolygonShape(sides: 6)
-						.offset(y: proxy.size.height * 0.6)
+						.offset(y: size.height * 0.6)
 				)
 		} //: SHIRT & BODY
-		.offset(y: visible ? 0 : proxy.size.height * 4 / 24)
+		.offset(y: visible ? 0 : size.height * 4 / 24)
 		.opacity(visible ? 1 : 0)
 	}
 }
 
 struct Hairline: View {
-	let proxy: GeometryProxy
+	let size: CGSize
 	let visible: Bool
 
 	var body: some View {
-		let width = proxy.size.width
-		let height = proxy.size.height
-
 		PolygonShape(sides: 6)
 			.frame(
-				maxWidth: visible ? width * 6 / 24 : 0,
-				maxHeight: visible ? height * 6 / 24 : 0,
+				maxWidth: visible ? size.width * 6 / 24 : 0,
+				maxHeight: visible ? size.height * 6 / 24 : 0,
 				alignment: .center
 			)
 			.foregroundColor(Color("yellow.700"))
-			.offset(y: -height * 6 / 24)
+			.offset(y: -size.height * 6 / 24)
 			.opacity(visible ? 1 : 0)
 			.mask(
 				PolygonShape(sides: 6)
 					.frame(
-						width: width * 12 / 24,
-						height: height * 12 / 24
+						width: size.width * 12 / 24,
+						height: size.height * 12 / 24
 					)
 			)
 	}
 }
 
 struct Bun: View {
-	let proxy: GeometryProxy
+	let size: CGSize
 	let visible: Bool
 
 	var body: some View {
 		PolygonShape(sides: 6)
 			.frame(
-				maxWidth: visible ? proxy.size.width * 4 / 24 : 0,
-				maxHeight: visible ? proxy.size.height * 4 / 24 : 0,
+				maxWidth: visible ? size.width * 4 / 24 : 0,
+				maxHeight: visible ? size.height * 4 / 24 : 0,
 				alignment: .center
 			)
 			.foregroundColor(Color("yellow.800"))
-			.offset(y: visible ? -proxy.size.height * 7 / 24 : -proxy.size.height * 6 / 24)
+			.offset(y: visible ? -size.height * 7 / 24 : -size.height * 6 / 24)
 			.opacity(visible ? 1 : 0)
 	}
 }
