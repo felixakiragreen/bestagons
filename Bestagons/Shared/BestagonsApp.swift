@@ -9,11 +9,11 @@ import SwiftUI
 
 @main
 struct BestagonsApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-    }
+	var body: some Scene {
+		WindowGroup {
+			ContentView()
+		}
+	}
 }
 
 // Actually, maybe I should remove since I'm not using anymore?
