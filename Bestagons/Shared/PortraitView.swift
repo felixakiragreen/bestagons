@@ -20,10 +20,9 @@ struct PortraitView: View {
 
 	@State var animationTimeIsForward = true
 	@State var animationDuration = 2.0
-	
+
 	@State var animationVersion = AnimationVersion.blur
-	
-	
+
 	@State var bgVisible = false
 	var bgDelayFraction = 0.0
 	var bgDurationFraction = 0.9
@@ -44,7 +43,6 @@ struct PortraitView: View {
 	var shadowDelayFraction = 0.9
 	var shadowDurationFraction = 1.8
 
-	
 	// MARK: - BODY
 
 	var body: some View {
@@ -54,6 +52,45 @@ struct PortraitView: View {
 			chestDurationFraction,
 			hairDurationFraction,
 		].reduce(0, +)
+
+		/* WTF
+		 //	NEED TO REDO THIS WHOLE SHIT
+
+		 let bgDuration = bgDurationFraction / fractionalDuration * animationDuration
+		 let bgDelay = bgDelayFraction / fractionalDuration * animationDuration
+		 let bgReversingDelay = animationTimeIsForward ? bgDelay : animationDuration - bgDelay
+		 let bgAnimation = Animation
+		 	.easeInOut(duration: bgDuration)
+		 	.delay(bgReversingDelay)
+
+		 let headDuration = headDurationFraction / fractionalDuration * animationDuration
+		 let headDelay = headDelayFraction / fractionalDuration * animationDuration
+		 let headReversingDelay = animationTimeIsForward ? headDelay : animationDuration - headDelay
+		 let headAnimation = Animation
+		 	.easeInOut(duration: headDuration)
+		 	.delay(headReversingDelay)
+
+		 let chestDuration = chestDurationFraction / fractionalDuration * animationDuration
+		 let chestDelay = chestDelayFraction / fractionalDuration * animationDuration
+		 let chestReversingDelay = animationTimeIsForward ? chestDelay : animationDuration - chestDelay
+		 let chestAnimation = Animation
+		 	.easeInOut(duration: chestDuration)
+		 	.delay(chestReversingDelay)
+
+		 let hairDuration = hairDurationFraction / fractionalDuration * animationDuration
+		 let hairDelay = hairDelayFraction / fractionalDuration * animationDuration
+		 let hairReversingDelay = animationTimeIsForward ? hairDelay : animationDuration - hairDelay
+		 let hairAnimation = Animation
+		 	.easeInOut(duration: hairDuration)
+		 	.delay(hairReversingDelay)
+
+		 let shadowDuration = shadowDurationFraction / fractionalDuration * animationDuration
+		 let shadowDelay = shadowDelayFraction / fractionalDuration * animationDuration
+		 let shadowReversingDelay = animationTimeIsForward ? shadowDelay : animationDuration - shadowDelay
+		 let shadowAnimation = Animation
+		 	.easeInOut(duration: shadowDuration)
+		 	.delay(shadowReversingDelay)
+		 */
 
 		return ZStack {
 			HStack {
@@ -69,13 +106,48 @@ struct PortraitView: View {
 								self.shadowVisible.toggle()
 							}
 						}
+					/*
+					 Text("bgDelay → \(bgDelay, specifier: "%.2f")")
+					 Text("headDelay → \(headDelay, specifier: "%.2f")")
+					 Text("chestDelay → \(chestDelay, specifier: "%.2f")")
+					 Text("hairDelay → \(hairDelay, specifier: "%.2f")")
+					 Text("shadowDelay → \(shadowDelay, specifier: "%.2f")")
+					 */
 					HStack {
 						// MARK: - ANIMATION SPECS
-						
+
 						Button("withAnimation") {
 							// flip direction
 							animationTimeIsForward.toggle()
-							
+
+							/* WTF
+
+							 // BG
+							 withAnimation(bgAnimation) {
+							 	bgVisible.toggle()
+							 }
+
+							 // HEAD
+							 withAnimation(headAnimation) {
+							 	headVisible.toggle()
+							 }
+
+							 // CHEST
+							 withAnimation(chestAnimation) {
+							 	chestVisible.toggle()
+							 }
+
+							 // HAIR
+							 withAnimation(hairAnimation) {
+							 	hairVisible.toggle()
+							 }
+
+							 // SHADOW
+							 withAnimation(shadowAnimation) {
+							 	shadowVisible.toggle()
+							 }
+							 */
+
 							// BG
 							withAnimation(
 								Animation
@@ -84,7 +156,7 @@ struct PortraitView: View {
 							) {
 								bgVisible.toggle()
 							}
-							
+
 							// HEAD
 							withAnimation(
 								Animation
@@ -93,7 +165,7 @@ struct PortraitView: View {
 							) {
 								headVisible.toggle()
 							}
-							
+
 							// CHEST
 							withAnimation(
 								Animation
@@ -102,7 +174,7 @@ struct PortraitView: View {
 							) {
 								chestVisible.toggle()
 							}
-							
+
 							// HAIR
 							withAnimation(
 								Animation
@@ -111,7 +183,7 @@ struct PortraitView: View {
 							) {
 								hairVisible.toggle()
 							}
-							
+
 							// SHADOW
 							withAnimation(
 								Animation
@@ -121,9 +193,10 @@ struct PortraitView: View {
 								shadowVisible.toggle()
 							}
 						}
-						
+
 						Button("instant") {
 							// flip direction
+							animationTimeIsForward.toggle()
 							bgVisible.toggle()
 							headVisible.toggle()
 							chestVisible.toggle()
@@ -131,12 +204,12 @@ struct PortraitView: View {
 							shadowVisible.toggle()
 						}
 					} //: HSTACK LABELS
-					
+
 					Picker(selection: $animationVersion, label: Text("Animation Style")) {
 						Text("gradient {v1}").tag(AnimationVersion.gradient)
 						Text("blur {v2}").tag(AnimationVersion.blur)
-					}.pickerStyle(PopUpButtonPickerStyle())
-					
+					}.pickerStyle(SegmentedPickerStyle())
+
 					VStack(alignment: .leading) {
 						Text("Animation Duration → \(animationDuration, specifier: "%.2f")")
 						Slider(value: $animationDuration, in: 0 ... 10)
@@ -146,7 +219,19 @@ struct PortraitView: View {
 
 				GeometryReader { geometry in
 					ZStack {
-						Background(visible: bgVisible)
+						if bgVisible {
+							Background()
+								.transition(.scale)
+						}
+						/*
+						 // PROBLEMATIC: - not using this because then I can't override it
+						 .asymmetric(
+						 	insertion: .scale,
+						 	removal: AnyTransition
+						 		.scale
+						 		.animation(Animation.spring().delay(fractionalDuration))
+						 )
+						 */
 
 						Chest(
 							size: geometry.size,
@@ -162,12 +247,15 @@ struct PortraitView: View {
 							version: animationVersion
 						)
 
-						Head(
-							size: geometry.size,
-							show: headVisible,
-							showShadow: shadowVisible,
-							version: animationVersion
-						)
+						if headVisible {
+							Head(
+								size: geometry.size,
+								show: headVisible,
+								showShadow: shadowVisible,
+								version: animationVersion
+							)
+							.transition(.scale)
+						}
 
 						Hairline(
 							size: geometry.size,
@@ -192,12 +280,12 @@ struct PortraitView: View {
 struct ShadowAnimatedBlur: View {
 	let blend: BlendMode
 	let show: Bool
-	
+
 	var body: some View {
 		HStack(spacing: 0.0) {
 			Color.white
 			Color.black
-		}//: HSTACK
+		} //: HSTACK
 		.blur(radius: show ? 0.0 : 100.0)
 		.opacity(0.12)
 		.blendMode(blend)
@@ -207,7 +295,7 @@ struct ShadowAnimatedBlur: View {
 struct FractionalFrameModifier: ViewModifier {
 	let size: CGSize
 	let fraction: CGFloat
-	
+
 	func body(content: Content) -> some View {
 		content
 			.frame(
@@ -235,15 +323,16 @@ extension View {
 // MARK: - BACKGROUND
 
 struct Background: View {
-	let visible: Bool
+//	let visible: Bool
 
 	var body: some View {
 		PolygonShape(sides: 6)
-			.frame(
-				maxWidth: visible ? .infinity : 0,
-				maxHeight: visible ? .infinity : 0,
-				alignment: .center
-			)
+//			.frame(
+//				maxWidth: visible ? .infinity : 0,
+//				maxHeight: visible ? .infinity : 0,
+//				alignment: .center
+//			)
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.foregroundColor(Color("grey.500"))
 	}
 }
@@ -266,7 +355,7 @@ struct Chest: View {
 				case AnimationVersion.blur:
 					ShadowAnimatedBlur(blend: .lighten, show: showShadow)
 				}
-			}//: SHIRT
+			} //: SHIRT
 
 			Group {
 				Color("grey.200")
@@ -276,13 +365,12 @@ struct Chest: View {
 				case AnimationVersion.blur:
 					ShadowAnimatedBlur(blend: .darken, show: showShadow)
 				}
-			}//: BODY
+			} //: BODY
 			.mask(
 				PolygonShape(sides: 6)
 					.fractionalFrame(size: size, fraction: 16 / 24)
 					.foregroundColor(.black)
 			)
-
 		} //: ZSTACK → SHIRT & BODY
 		.mask(
 			PolygonShape(sides: 6)
@@ -295,7 +383,7 @@ struct Chest: View {
 		.offset(y: show ? 0 : -(size.height * 3 / 24))
 		.opacity(show ? 1 : 0)
 	}
-	
+
 	var shirtShadow1: some View {
 		LinearGradient(
 			gradient: Gradient(colors: [
@@ -340,7 +428,7 @@ struct Bun: View {
 			case AnimationVersion.blur:
 				ShadowAnimatedBlur(blend: .darken, show: showShadow)
 			}
-		}//: ZSTACK
+		} //: ZSTACK
 		.frame(
 			maxWidth: show ? size.width * 4 / 24 : 0,
 			maxHeight: show ? size.height * 4 / 24 : 0,
@@ -357,7 +445,7 @@ struct Bun: View {
 		.offset(y: show ? -(size.height * 7 / 24) : -(size.height * 6 / 24))
 //		.opacity(show ? 1 : 0)
 	}
-	
+
 	var bunShadow1: some View {
 		LinearGradient(
 			gradient: Gradient(colors: [
@@ -396,7 +484,7 @@ struct Head: View {
 				.scale(show ? 1 : 0)
 		)
 	}
-	
+
 	var headShadow1: some View {
 		LinearGradient(
 			gradient: Gradient(colors: [
@@ -428,7 +516,7 @@ struct Hairline: View {
 			case AnimationVersion.blur:
 				ShadowAnimatedBlur(blend: .darken, show: showShadow)
 			}
-		}//: ZSTACK
+		} //: ZSTACK
 		.fractionalFrame(size: size, fraction: 12 / 24)
 		.mask(
 			StretchyHexagon(trunk: 0)
@@ -441,7 +529,7 @@ struct Hairline: View {
 		.offset(y: show ? -(size.height * 3 / 24) : -(size.height * 6 / 24))
 //		.opacity(show ? 1 : 0)
 	}
-	
+
 	var hairlineShadow1: some View {
 		LinearGradient(
 			gradient: Gradient(colors: [
