@@ -32,19 +32,19 @@ struct PortraitView: View {
 	@State var animationVersion = AnimationVersion.blur
 
 	@State var bgVisible = false
-	@State var bgAxP = AxP(start: 0.0, end: 0.3)
+	@State var bgAxP = AxP(start: 0.0, end: 0.35)
 
 	@State var headVisible = false
-	@State var headAxP = AxP(start: 0.2, end: 0.5)
+	@State var headAxP = AxP(start: 0.15, end: 0.5)
 
 	@State var chestVisible = false
-	@State var chestAxP = AxP(start: 0.35, end: 0.65)
+	@State var chestAxP = AxP(start: 0.3, end: 0.65)
 
 	@State var hairVisible = false
-	@State var hairAxP = AxP(start: 0.5, end: 0.8)
+	@State var hairAxP = AxP(start: 0.55, end: 0.9)
 
 	@State var shadowVisible = false
-	@State var shadowAxP = AxP(start: 0.7, end: 1.0)
+	@State var shadowAxP = AxP(start: 0.6, end: 1.0)
 	
 	let stepperUnit = 0.05
 
@@ -75,16 +75,19 @@ struct PortraitView: View {
 						Toggle(isOn: $isReversing) {
 							Text("isReversing")
 						}
+						Toggle(isOn: $isLooping) {
+							Text("isLooping")
+						}
 						Spacer()
 					}
 					HStack {
 						// MARK: - ANIMATION SPECS
 
-						Button("2s") {
-							animationDuration = 2.0
+						Button("short") {
+							animationDuration = 1.5
 						}
-						Button("4s") {
-							animationDuration = 4.0
+						Button("long") {
+							animationDuration = 3.0
 						}
 						
 						Button("withAnimation") {
@@ -187,16 +190,12 @@ struct PortraitView: View {
 						Slider(value: $animationDuration, in: 0 ... 10)
 					}
 					
-					GroupBox(label: Text("BG")) {
-						HStack {
-							VStack {
-								Stepper(value: $bgAxP.start, in: 0...bgAxP.end, step: 0.05, label: {
-									Text("start → \(bgAxP.start, specifier: "%.2f")")
-								})
-							}
-							Spacer()
-							
-						}
+					GroupBox(label: Text("Animation Proportions")) {
+						AxPConfigView(title: "background", value: $bgAxP)
+						AxPConfigView(title: "head", value: $headAxP)
+						AxPConfigView(title: "chest", value: $chestAxP)
+						AxPConfigView(title: "hair", value: $hairAxP)
+						AxPConfigView(title: "shadows", value: $shadowAxP)
 					}
 				} //: LEFT
 				.padding(.horizontal, 16.0)
@@ -250,12 +249,14 @@ struct PortraitView: View {
 							version: animationVersion
 						)
 					} //: ZSTACK
-					.frame(maxWidth: .infinity, maxHeight: .infinity)
-//					.drawingGroup()
+//					.frame(maxWidth: .infinity, maxHeight: .infinity)
+					.drawingGroup()
 				} //: RIGHT
-				.aspectRatio(1, contentMode: .fit)
-				.padding(40)
+//				.aspectRatio(1, contentMode: .fit)
+				.frame(width: 640, height: 640)
+				.padding(55)
 				.background(Color.black)
+				.padding(10)
 			}
 		}
 	}
@@ -266,13 +267,31 @@ struct PortraitView: View {
 		// start: proportion of 0.0 - 1.0 so 0.1 would start 10% of the way into the animation
 		// end: proportion of 0.0 - 1.0 so 1.0 would end at the end of the whole animation
 
-		return Animation
-			.easeOut(duration: (proportion.end - proportion.start) * animationDuration)
-			.asymmetricDelay(
-				initial: proportion.start * animationDuration,
-				reversal: (1.0 - proportion.end) * animationDuration,
-				isReversing: isReversing
-			)
+		if isReversing {
+			return Animation
+				.easeIn(duration: (proportion.end - proportion.start) * animationDuration)
+				.asymmetricDelay(
+					initial: proportion.start * animationDuration,
+					reversal: (1.0 - proportion.end) * animationDuration,
+					isReversing: isReversing
+				)
+		} else {
+			return Animation
+				.easeOut(duration: (proportion.end - proportion.start) * animationDuration)
+				.asymmetricDelay(
+					initial: proportion.start * animationDuration,
+					reversal: (1.0 - proportion.end) * animationDuration,
+					isReversing: isReversing
+				)
+		}
+		
+//		return Animation
+//			.easeOut(duration: (proportion.end - proportion.start) * animationDuration)
+//			.asymmetricDelay(
+//				initial: proportion.start * animationDuration,
+//				reversal: (1.0 - proportion.end) * animationDuration,
+//				isReversing: isReversing
+//			)
 	}
 }
 
@@ -331,7 +350,53 @@ extension Animation {
 	}
 }
 
+struct AxPConfigView: View {
+	let title: String
+	@Binding var value: AxP
+	
+	var body: some View {
+		HStack(alignment: .firstTextBaseline) {
+			Text(title)
+				.font(.caption)
+			Spacer()
+			Stepper(value: $value.start, in: 0...value.end, step: 0.05, label: {
+				Text("start → \(value.start, specifier: "%.2f")")
+			})
+			Stepper(value: $value.end, in: value.start...1, step: 0.05, label: {
+				Text("end → \(value.end, specifier: "%.2f")")
+			})
+			Text("= \(value.end - value.start, specifier: "%.2f")")
+		}
+	}
+}
 
+// Conditional View Modifier
+//extension View {
+//  @ViewBuilder
+//  func `if`<Transform: View>(
+//	 _ condition: Bool,
+//	 transform: (Self) -> Transform
+//  ) -> some View {
+//	 if condition {
+//		transform(self)
+//	 } else {
+//		self
+//	 }
+//  }
+//}
+//
+//extension Animation {
+//	func `if`(
+//	  _ condition: Bool,
+//	  animation: Animation
+//	) -> Animation {
+//	  if condition {
+//		 return animation
+//	  } else {
+//		 return self
+//	  }
+//	}
+//}
 
 // MARK: - BACKGROUND
 
