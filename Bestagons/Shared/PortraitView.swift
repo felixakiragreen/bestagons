@@ -11,6 +11,12 @@ enum AnimationVersion: Int {
 	case gradient = 1, blur
 }
 
+// Animation Transition Proportion - abbreviating because I'm tired of long names
+struct AxP {
+	var start: Double // 0.0 - 1.0 ... 0.1 would start 10% of the way into the animation
+	var end: Double // 0.0 - 1.0 ... 1.0 would end at the end of the whole animation
+}
+
 struct PortraitView: View {
 	// MARK: - PROPERTIES
 
@@ -19,78 +25,37 @@ struct PortraitView: View {
 	// MARK: - STATE
 
 	@State var animationTimeIsForward = true
+	@State var isReversing = false
+	@State var isLooping = false
 	@State var animationDuration = 2.0
 
 	@State var animationVersion = AnimationVersion.blur
 
 	@State var bgVisible = false
-	var bgDelayFraction = 0.0
-	var bgDurationFraction = 0.9
+	@State var bgAxP = AxP(start: 0.0, end: 0.3)
 
 	@State var headVisible = false
-	var headDelayFraction = 0.3
-	var headDurationFraction = 1.2
+	@State var headAxP = AxP(start: 0.2, end: 0.5)
 
 	@State var chestVisible = false
-	var chestDelayFraction = 0.6
-	var chestDurationFraction = 1.2
+	@State var chestAxP = AxP(start: 0.35, end: 0.65)
 
 	@State var hairVisible = false
-	var hairDelayFraction = 0.9
-	var hairDurationFraction = 1.2
+	@State var hairAxP = AxP(start: 0.5, end: 0.8)
 
 	@State var shadowVisible = false
-	var shadowDelayFraction = 0.9
-	var shadowDurationFraction = 1.8
+	@State var shadowAxP = AxP(start: 0.7, end: 1.0)
+	
+	let stepperUnit = 0.05
 
 	// MARK: - BODY
 
 	var body: some View {
-		let fractionalDuration = [
-			bgDurationFraction,
-			headDurationFraction,
-			chestDurationFraction,
-			hairDurationFraction,
-		].reduce(0, +)
-
-		/* WTF
-		 //	NEED TO REDO THIS WHOLE SHIT
-
-		 let bgDuration = bgDurationFraction / fractionalDuration * animationDuration
-		 let bgDelay = bgDelayFraction / fractionalDuration * animationDuration
-		 let bgReversingDelay = animationTimeIsForward ? bgDelay : animationDuration - bgDelay
-		 let bgAnimation = Animation
-		 	.easeInOut(duration: bgDuration)
-		 	.delay(bgReversingDelay)
-
-		 let headDuration = headDurationFraction / fractionalDuration * animationDuration
-		 let headDelay = headDelayFraction / fractionalDuration * animationDuration
-		 let headReversingDelay = animationTimeIsForward ? headDelay : animationDuration - headDelay
-		 let headAnimation = Animation
-		 	.easeInOut(duration: headDuration)
-		 	.delay(headReversingDelay)
-
-		 let chestDuration = chestDurationFraction / fractionalDuration * animationDuration
-		 let chestDelay = chestDelayFraction / fractionalDuration * animationDuration
-		 let chestReversingDelay = animationTimeIsForward ? chestDelay : animationDuration - chestDelay
-		 let chestAnimation = Animation
-		 	.easeInOut(duration: chestDuration)
-		 	.delay(chestReversingDelay)
-
-		 let hairDuration = hairDurationFraction / fractionalDuration * animationDuration
-		 let hairDelay = hairDelayFraction / fractionalDuration * animationDuration
-		 let hairReversingDelay = animationTimeIsForward ? hairDelay : animationDuration - hairDelay
-		 let hairAnimation = Animation
-		 	.easeInOut(duration: hairDuration)
-		 	.delay(hairReversingDelay)
-
-		 let shadowDuration = shadowDurationFraction / fractionalDuration * animationDuration
-		 let shadowDelay = shadowDelayFraction / fractionalDuration * animationDuration
-		 let shadowReversingDelay = animationTimeIsForward ? shadowDelay : animationDuration - shadowDelay
-		 let shadowAnimation = Animation
-		 	.easeInOut(duration: shadowDuration)
-		 	.delay(shadowReversingDelay)
-		 */
+		let bgAnimation = proportionallyDelayedAx(bgAxP)
+		let headAnimation = proportionallyDelayedAx(headAxP)
+		let chestAnimation = proportionallyDelayedAx(chestAxP)
+		let hairAnimation = proportionallyDelayedAx(hairAxP)
+		let shadowAnimation = proportionallyDelayedAx(shadowAxP)
 
 		return ZStack {
 			HStack {
@@ -106,97 +71,105 @@ struct PortraitView: View {
 								self.shadowVisible.toggle()
 							}
 						}
-					/*
-					 Text("bgDelay → \(bgDelay, specifier: "%.2f")")
-					 Text("headDelay → \(headDelay, specifier: "%.2f")")
-					 Text("chestDelay → \(chestDelay, specifier: "%.2f")")
-					 Text("hairDelay → \(hairDelay, specifier: "%.2f")")
-					 Text("shadowDelay → \(shadowDelay, specifier: "%.2f")")
-					 */
+					HStack {
+						Toggle(isOn: $isReversing) {
+							Text("isReversing")
+						}
+						Spacer()
+					}
 					HStack {
 						// MARK: - ANIMATION SPECS
 
+						Button("2s") {
+							animationDuration = 2.0
+						}
+						Button("4s") {
+							animationDuration = 4.0
+						}
+						
 						Button("withAnimation") {
 							// flip direction
 							animationTimeIsForward.toggle()
-
-							/* WTF
-
-							 // BG
-							 withAnimation(bgAnimation) {
-							 	bgVisible.toggle()
-							 }
-
-							 // HEAD
-							 withAnimation(headAnimation) {
-							 	headVisible.toggle()
-							 }
-
-							 // CHEST
-							 withAnimation(chestAnimation) {
-							 	chestVisible.toggle()
-							 }
-
-							 // HAIR
-							 withAnimation(hairAnimation) {
-							 	hairVisible.toggle()
-							 }
-
-							 // SHADOW
-							 withAnimation(shadowAnimation) {
-							 	shadowVisible.toggle()
-							 }
-							 */
+							isReversing.toggle()
 
 							// BG
-							withAnimation(
-								Animation
-									.easeInOut(duration: bgDurationFraction / fractionalDuration * animationDuration)
-									.delay(bgDelayFraction / fractionalDuration * animationDuration)
-							) {
+							withAnimation(bgAnimation) {
 								bgVisible.toggle()
 							}
 
 							// HEAD
-							withAnimation(
-								Animation
-									.easeInOut(duration: headDurationFraction / fractionalDuration * animationDuration)
-									.delay(headDelayFraction / fractionalDuration * animationDuration)
-							) {
+							withAnimation(headAnimation) {
 								headVisible.toggle()
 							}
 
 							// CHEST
-							withAnimation(
-								Animation
-									.easeInOut(duration: chestDurationFraction / fractionalDuration * animationDuration)
-									.delay(chestDelayFraction / fractionalDuration * animationDuration)
-							) {
+							withAnimation(chestAnimation) {
 								chestVisible.toggle()
 							}
 
 							// HAIR
-							withAnimation(
-								Animation
-									.easeInOut(duration: hairDurationFraction / fractionalDuration * animationDuration)
-									.delay(hairDelayFraction / fractionalDuration * animationDuration)
-							) {
+							withAnimation(hairAnimation) {
 								hairVisible.toggle()
 							}
 
 							// SHADOW
-							withAnimation(
-								Animation
-									.easeInOut(duration: shadowDurationFraction / fractionalDuration * animationDuration)
-									.delay(shadowDelayFraction / fractionalDuration * animationDuration)
-							) {
+							withAnimation(shadowAnimation) {
 								shadowVisible.toggle()
 							}
+
+							/*: v1
+							 // BG
+							 withAnimation(
+							 	Animation
+							 		.easeInOut(duration: bgDurationFraction / fractionalDuration * animationDuration)
+							 		.delay(bgDelayFraction / fractionalDuration * animationDuration)
+							 ) {
+							 	bgVisible.toggle()
+							 }
+
+							 // HEAD
+							 withAnimation(
+							 	Animation
+							 		.easeInOut(duration: headDurationFraction / fractionalDuration * animationDuration)
+							 		.delay(headDelayFraction / fractionalDuration * animationDuration)
+							 ) {
+							 	headVisible.toggle()
+							 }
+
+							 // CHEST
+							 withAnimation(
+							 	Animation
+							 		.easeInOut(duration: chestDurationFraction / fractionalDuration * animationDuration)
+							 		.delay(chestDelayFraction / fractionalDuration * animationDuration)
+							 ) {
+							 	chestVisible.toggle()
+							 }
+
+							 // HAIR
+							 withAnimation(
+							 	Animation
+							 		.easeInOut(duration: hairDurationFraction / fractionalDuration * animationDuration)
+							 		.delay(hairDelayFraction / fractionalDuration * animationDuration)
+							 ) {
+							 	hairVisible.toggle()
+							 }
+
+							 // SHADOW
+							 withAnimation(
+							 	Animation
+							 		.easeInOut(duration: shadowDurationFraction / fractionalDuration * animationDuration)
+							 		.delay(shadowDelayFraction / fractionalDuration * animationDuration)
+							 ) {
+							 	shadowVisible.toggle()
+							 }
+							 */
 						}
 
-						Button("instant") {
+						Button("without") {
 							// flip direction
 							animationTimeIsForward.toggle()
+							isReversing.toggle()
+							//
 							bgVisible.toggle()
 							headVisible.toggle()
 							chestVisible.toggle()
@@ -205,26 +178,40 @@ struct PortraitView: View {
 						}
 					} //: HSTACK LABELS
 
-					Picker(selection: $animationVersion, label: Text("Animation Style")) {
+					Picker(selection: $animationVersion, label: Text("Animation version")) {
 						Text("gradient {v1}").tag(AnimationVersion.gradient)
 						Text("blur {v2}").tag(AnimationVersion.blur)
 					}.pickerStyle(SegmentedPickerStyle())
 
-					VStack(alignment: .leading) {
-						Text("Animation Duration → \(animationDuration, specifier: "%.2f")")
+					GroupBox(label: Text("Animation Duration → \(animationDuration, specifier: "%.2f")")) {
 						Slider(value: $animationDuration, in: 0 ... 10)
+					}
+					
+					GroupBox(label: Text("BG")) {
+						HStack {
+							VStack {
+								Stepper(value: $bgAxP.start, in: 0...bgAxP.end, step: 0.05, label: {
+									Text("start → \(bgAxP.start, specifier: "%.2f")")
+								})
+							}
+							Spacer()
+							
+						}
 					}
 				} //: LEFT
 				.padding(.horizontal, 16.0)
 
 				GeometryReader { geometry in
 					ZStack {
-						if bgVisible {
-							Background()
-								.transition(.scale)
-						}
-						/*
-						 // PROBLEMATIC: - not using this because then I can't override it
+						/* TRANSITION:
+						 if bgVisible {
+						 	Background()
+						 		.transition(.scale)
+						 }
+						 */
+
+						/* ASYMMETRIC TRANSITION
+						 // It's problematic -  not using this because then I can't override it
 						 .asymmetric(
 						 	insertion: .scale,
 						 	removal: AnyTransition
@@ -232,6 +219,8 @@ struct PortraitView: View {
 						 		.animation(Animation.spring().delay(fractionalDuration))
 						 )
 						 */
+
+						Background(show: bgVisible)
 
 						Chest(
 							size: geometry.size,
@@ -247,15 +236,12 @@ struct PortraitView: View {
 							version: animationVersion
 						)
 
-						if headVisible {
-							Head(
-								size: geometry.size,
-								show: headVisible,
-								showShadow: shadowVisible,
-								version: animationVersion
-							)
-							.transition(.scale)
-						}
+						Head(
+							size: geometry.size,
+							show: headVisible,
+							showShadow: shadowVisible,
+							version: animationVersion
+						)
 
 						Hairline(
 							size: geometry.size,
@@ -272,6 +258,21 @@ struct PortraitView: View {
 				.background(Color.black)
 			}
 		}
+	}
+
+	func proportionallyDelayedAx(
+		_ proportion: AxP
+	) -> Animation {
+		// start: proportion of 0.0 - 1.0 so 0.1 would start 10% of the way into the animation
+		// end: proportion of 0.0 - 1.0 so 1.0 would end at the end of the whole animation
+
+		return Animation
+			.easeOut(duration: (proportion.end - proportion.start) * animationDuration)
+			.asymmetricDelay(
+				initial: proportion.start * animationDuration,
+				reversal: (1.0 - proportion.end) * animationDuration,
+				isReversing: isReversing
+			)
 	}
 }
 
@@ -320,10 +321,22 @@ extension View {
 	}
 }
 
+extension Animation {
+	func asymmetricDelay(
+		initial: Double,
+		reversal: Double,
+		isReversing: Bool
+	) -> Animation {
+		delay(isReversing ? reversal : initial)
+	}
+}
+
+
+
 // MARK: - BACKGROUND
 
 struct Background: View {
-//	let visible: Bool
+	let show: Bool
 
 	var body: some View {
 		PolygonShape(sides: 6)
@@ -334,6 +347,7 @@ struct Background: View {
 //			)
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.foregroundColor(Color("grey.500"))
+			.scaleEffect(show ? 1 : 0)
 	}
 }
 
