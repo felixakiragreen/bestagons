@@ -161,6 +161,7 @@ class ApparatusGenerator {
 	}
 	
 	// MARK: - generate
+	/// Figured out: purpose of  initialTop + Left is for making sides match (like for a cube or embedded code)
 	func generate(
 		// initialTop: [] = nil
 		// initialLeft: [] = nil
@@ -177,8 +178,6 @@ class ApparatusGenerator {
 		
 		var grid = [[Block]]()
 		
-//		var grid = Array()
-		
 		for i in 0...yDim + 1 {
 			for j in 0...xDim + 1 {
 				// Create new block - Line 54
@@ -186,6 +185,7 @@ class ApparatusGenerator {
 					grid[i][j] = Block()
 				}
 				// TODO: handle initialTop & initialLeft
+				
 				
 				// TODO: handle hSymmetric & vSymmetric
 				else {
@@ -266,32 +266,76 @@ class ApparatusGenerator {
 	// MARK: - DECISIONS
 	
 	// TODO: rename to shouldStart?
-	func startNewFromBlank(
-		x: Int,
-		y: Int
-	) -> Bool {
+	/// Determines whether a blank should be used?
+	func startNewFromBlank(x: Int, y: Int) -> Bool {
 		if simple {
 			return true
 		}
-//		TODO: active position
-		return false
+		
+		let fuzziness = -1 * (1 - roundness)
+		if !activePosition(x: x, y: y, fuzzy: fuzziness) {
+			return false
+		}
+		
+		return noise(nX: Double(x), nY: Double(y), nZ: "_blank") <= solidness
 	}
 	
+	func startNew(x: Int, y: Int) -> Bool {
+		if simple {
+			return true
+		}
+		
+		let fuzziness = 0.0
+		if !activePosition(x: x, y: y, fuzzy: fuzziness) {
+			return false
+		}
+		
+		return noise(nX: Double(x), nY: Double(y), nZ: "_new") <= chanceNew
+	}
+	
+	func extend(x: Int, y: Int) -> Bool {
+		let fuzziness = 1 - roundness
+		if !activePosition(x: x, y: y, fuzzy: fuzziness) && !simple {
+			return false
+		}
+		
+		return noise(nX: Double(x), nY: Double(y), nZ: "_extend") <= chanceExtend
+	}
+	
+	func verticalDir(x: Int, y: Int) -> Bool {
+		return noise(nX: Double(x), nY: Double(y), nZ: "_vert") <= chanceVertical
+	}
+	
+	// TODO: document, not sure what it does
+	func activePosition(
+		x: Int,
+		y: Int,
+		fuzzy: Double
+	) -> Bool {
+		let fuzziness = 1 + noise(nX: Double(x), nY: Double(y), nZ: "_active") * fuzzy
+		let xA = pow(Double(x) - Double(xDim / 2), 2) / pow(xRadius * fuzziness, 2)
+		let yA = pow(Double(y) - Double(yDim / 2), 2) / pow(yRadius * fuzziness, 2)
+		
+		return xA + yA < 1
+	}
 	
 	
 	// MARK: - NOISE / RANDOMNESS
 	
+	/// Generates noise / randomness
 	func noise(
 		nX: Double,
 		nY: Double,
 		nZ: String
 	) -> Double {
+		// TODO: use GKNoiseMap (if simplex)
 		return Double.random(in: 0.0...1.0)
 	}
 	
-	func getRandomElement(<#parameters#>) -> <#return type#> {
-		<#function body#>
-	}
+//	func getRandomElement(<#parameters#>) -> <#return type#> {
+//		<#function body#>
+//	}
+//	[].RandomElement
 }
 
 
@@ -300,3 +344,5 @@ class ApparatusGenerator {
 
 
 // MARK: - CONVERSION
+
+// don't need for now
