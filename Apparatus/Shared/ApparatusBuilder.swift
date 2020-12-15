@@ -215,25 +215,99 @@ class ApparatusGenerator {
 			return blockSet1(x: x, y: y)
 		}
 		
-		//
+		if left.ind && !top.ind {
+			return blockSet2(x: x, y: y)
+		}
 		
-		// TODO: remove
+		if !left.ind && top.ind {
+			return blockSet4(x: x, y: y)
+		}
+		
+		if left.ind && top.ind {
+			if !left.h && !top.v {
+				return blockSet6(left: left)
+			}
+			if left.h && !top.v {
+				return blockSet7(x: x, y: y, left: left)
+			}
+			if !left.h && top.v {
+				return blockSet8(x: x, y: y, top: top)
+			}
+			return blockSet9(x: x, y: y, top: top, left: left)
+		}
+		
+//		// TODO: remove
+//		guard never?
 		return Block()
 	}
 	
 	// MARK: - BLOCK SETS
 
-	func blockSet1(
-		x: Int,
-		y: Int
-	) -> Block {
+	func blockSet1(x: Int, y: Int) -> Block {
 		if startNewFromBlank(x: x, y: y) {
 			return newBlock(nX: x, nY: y)
 		}
 		return Block()
 	}
 	
-//	.. TODO: blockSet1 - 9
+	func blockSet2(x: Int, y: Int) -> Block {
+		if startNewFromBlank(x: x, y: y) {
+			return newBlock(nX: x, nY: y)
+		}
+		return Block(v: true)
+	}
+	
+	func blockSet3(x: Int, y: Int, left: Block) -> Block {
+		if extend(x: x, y: y) {
+			return Block(h: true, ind: true, clr: left.clr, id: left.id)
+		}
+		return blockSet2(x: x, y: x)
+	}
+	
+	func blockSet4(x: Int, y: Int) -> Block {
+		if startNewFromBlank(x: x, y: y) {
+			return newBlock(nX: x, nY: y)
+		}
+		return Block(h: true)
+	}
+	
+	func blockSet5(x: Int, y: Int, top: Block) -> Block {
+		if extend(x: x, y: y) {
+			return Block(v: true, ind: true, clr: top.clr, id: top.id)
+		}
+		return blockSet4(x: x, y: x)
+	}
+	
+	func blockSet6(left: Block) -> Block {
+		return Block(ind: true, clr: left.clr, id: left.id)
+	}
+	
+	func blockSet7(x: Int, y: Int, left: Block) -> Block {
+		if extend(x: x, y: y) {
+			return Block(h: true, ind: true, clr: left.clr, id: left.id)
+		}
+		if startNew(x: x, y: y) {
+			return newBlock(nX: x, nY: y)
+		}
+		return Block(h: true, v: true)
+	}
+	
+	func blockSet8(x: Int, y: Int, top: Block) -> Block {
+		if extend(x: x, y: y) {
+			return Block(v: true, ind: true, clr: top.clr, id: top.id)
+		}
+		if startNew(x: x, y: y) {
+			return newBlock(nX: x, nY: y)
+		}
+		return Block(h: true, v: true)
+	}
+	
+	func blockSet9(x: Int, y: Int, top: Block, left: Block) -> Block {
+		if verticalDir(x: x, y: y) {
+			return Block(v: true, ind: true, clr: top.clr, id: top.id)
+		}
+		return Block(h: true, ind: true, clr: left.clr, id: left.id)
+	}
 
 	// MARK: - NEW BLOCK
 	func newBlock(
@@ -307,11 +381,7 @@ class ApparatusGenerator {
 	}
 	
 	// TODO: document, not sure what it does
-	func activePosition(
-		x: Int,
-		y: Int,
-		fuzzy: Double
-	) -> Bool {
+	func activePosition(x: Int, y: Int, fuzzy: Double) -> Bool {
 		let fuzziness = 1 + noise(nX: Double(x), nY: Double(y), nZ: "_active") * fuzzy
 		let xA = pow(Double(x) - Double(xDim / 2), 2) / pow(xRadius * fuzziness, 2)
 		let yA = pow(Double(y) - Double(yDim / 2), 2) / pow(yRadius * fuzziness, 2)
