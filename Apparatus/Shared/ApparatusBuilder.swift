@@ -124,7 +124,11 @@ class ApparatusGenerator {
 		verticalSymmetry: Bool = false,
 		roundness: Double = 0.1,
 		solidness: Double = 0.5,
-		colors: [Color] = [],
+		colors: [Color] = [
+			Color.blue,
+			Color.purple,
+			Color.green,
+		],
 		colorMode: ColorMode = .group,
 		groupSize: Double = 0.8,
 		simple: Bool = false
@@ -152,7 +156,7 @@ class ApparatusGenerator {
 		self.idX = 0
 		self.idY = 0
 		self.idCounter = 0
-		self.colorMain = Color.blue
+		self.colorMain = colors.randomElement() ?? Color.red
 	}
 	
 	func getIdAndIncrement() -> Int {
@@ -165,10 +169,12 @@ class ApparatusGenerator {
 	func generate(
 		// initialTop: [] = nil
 		// initialLeft: [] = nil
-		// verbose: Bool = false
+//		 verbose: Bool = false
 		idX: Int = 0,
 		idY: Int = 0
 	) -> [[Block]] {
+//	) -> [BlockRect] {
+		
 		self.idX = idX
 		self.idY = idY
 		
@@ -176,17 +182,24 @@ class ApparatusGenerator {
 		// TODO: get_random colors
 		self.colorMain = Color.blue
 		
-		var grid = [[Block]]()
+//		var grid = [[Block]]()
 		
-		for i in 0...yDim + 1 {
-			for j in 0...xDim + 1 {
+		var grid = Array(
+			repeating: Array(
+				repeating: Block(), count: xDim
+			),
+			count: yDim + 1
+		)
+		
+		for i in grid.indices {
+			for j in grid[i].indices {
 				// Create new block - Line 54
 				if i == 0 || j == 0 {
 					grid[i][j] = Block()
 				}
 				// TODO: handle initialTop & initialLeft
-				
-				
+
+
 				// TODO: handle hSymmetric & vSymmetric
 				else {
 					grid[i][j] = nextBlock(
@@ -198,6 +211,10 @@ class ApparatusGenerator {
 				}
 			}
 		}
+		
+//		grid[0...yDim + 1] =
+		
+//		let rects = convertLineGridToRect(grid: grid)
 		
 		return grid
 	}
@@ -318,9 +335,12 @@ class ApparatusGenerator {
 		
 		var clr: Color {
 			switch colorMode {
-//			case .random:
+			case .random:
+				return colors.randomElement() ?? Color.red
 //				return // noise func
 //			TODO: color group
+			case .group:
+				return colorMain
 			case .main:
 				// TODO:
 				return colorMain
@@ -415,4 +435,65 @@ class ApparatusGenerator {
 
 // MARK: - CONVERSION
 
-// don't need for now
+// edge?
+struct BlockCorner {
+	var x1: Int
+	var y1: Int
+	var clr: Color
+	var id: Int
+}
+
+struct BlockRect {
+	var x1: Int
+	var y1: Int
+	var w: Int
+	var h: Int
+	var clr: Color
+	var id: Int
+}
+
+func convertLineGridToRect(grid: [[Block]]) -> [BlockRect] {
+	let nwCorners = getNWCorners(grid: grid)
+	return extendCornersToRect(grid: grid, corners: nwCorners)
+}
+
+func getNWCorners(grid: [[Block]]) -> [BlockCorner] {
+	var nwCorners = [BlockCorner]()
+	
+//	for column in grid {
+//		for cell in column {
+//			if cell.h && cell.v && cell.ind {
+//				nwCorners.append(BlockRect(x1: cell, y1: <#T##Int#>, clr: <#T##Color#>, id: <#T##Int#>))
+//			}
+//		}
+//	}
+	for i in grid.indices {
+		for j in grid[i].indices {
+			let cell = grid[i][j]
+			if cell.h && cell.v && cell.ind {
+				nwCorners.append(BlockCorner(x1: j, y1: i, clr: cell.clr ?? Color.orange, id: cell.id ?? 9999))
+			}
+		}
+	}
+	
+	return nwCorners
+}
+
+func extendCornersToRect(grid: [[Block]], corners: [BlockCorner]) -> [BlockRect] {
+	return corners.map { c in
+		var accX = 1
+		repeat {
+			accX += 1
+		} while c.x1 + accX < grid[c.y1].count && !grid[c.y1][c.x1 + accX].v
+		
+		//	(c.x1 + accx < grid[c.y1].length && !grid[c.y1][c.x1 + accx].v) {
+		
+		var accY = 1
+		repeat {
+			accY += 1
+		} while c.y1 + accY < grid.count && !grid[c.y1 + accY][c.x1].h
+		// (c.y1 + accy < grid.length && !grid[c.y1 + accy][c.x1].h)
+		
+		return BlockRect(x1: c.x1, y1: c.y1, w: accX, h: accY, clr: c.clr, id: c.id)
+	}
+}
