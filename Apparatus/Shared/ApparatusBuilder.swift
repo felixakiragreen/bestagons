@@ -44,8 +44,8 @@ symmetry
 
 */
 
+// MARK: - Structs
 
-// MARK: - asdf
 
 enum ColorMode {
 	case single, main, group, random
@@ -77,6 +77,27 @@ struct Block {
 		}
 	}
 }
+
+// edge?
+struct BlockCorner {
+	var x1: Int
+	var y1: Int
+	var clr: Color
+	var id: Int
+}
+
+struct BlockRect {
+	var x1: Int
+	var y1: Int
+	var w: Int
+	var h: Int
+	var clr: Color
+	var id: Int
+}
+
+
+
+// MARK: - Generator
 
 class ApparatusGenerator {
 	
@@ -131,7 +152,7 @@ class ApparatusGenerator {
 		],
 		colorMode: ColorMode = .group,
 		groupSize: Double = 0.8,
-		simple: Bool = false
+		simple: Bool = true
 //		simplex
 //		rateOfChange: Double = 0.01
 	) {
@@ -150,7 +171,7 @@ class ApparatusGenerator {
 		self.roundness = roundness
 		self.solidness = solidness
 		self.simple = simple
-		self.globalSeed = Double.random(in: 0.0...1.0)
+		self.globalSeed = Double.random(in: 0.0...1.0) // TODO: update to noise func
 
 		//
 		self.idX = 0
@@ -233,10 +254,16 @@ class ApparatusGenerator {
 		}
 		
 		if left.ind && !top.ind {
+			if left.h {
+				return blockSet3(x: x, y: y, left: left)
+			}
 			return blockSet2(x: x, y: y)
 		}
 		
 		if !left.ind && top.ind {
+			if top.v {
+				return blockSet5(x: x, y: y, top: top)
+			}
 			return blockSet4(x: x, y: y)
 		}
 		
@@ -435,23 +462,6 @@ class ApparatusGenerator {
 
 // MARK: - CONVERSION
 
-// edge?
-struct BlockCorner {
-	var x1: Int
-	var y1: Int
-	var clr: Color
-	var id: Int
-}
-
-struct BlockRect {
-	var x1: Int
-	var y1: Int
-	var w: Int
-	var h: Int
-	var clr: Color
-	var id: Int
-}
-
 func convertLineGridToRect(grid: [[Block]]) -> [BlockRect] {
 	let nwCorners = getNWCorners(grid: grid)
 	return extendCornersToRect(grid: grid, corners: nwCorners)
@@ -481,14 +491,14 @@ func getNWCorners(grid: [[Block]]) -> [BlockCorner] {
 
 func extendCornersToRect(grid: [[Block]], corners: [BlockCorner]) -> [BlockRect] {
 	return corners.map { c in
-		var accX = 1
+		var accX = 0
 		repeat {
 			accX += 1
 		} while c.x1 + accX < grid[c.y1].count && !grid[c.y1][c.x1 + accX].v
 		
 		//	(c.x1 + accx < grid[c.y1].length && !grid[c.y1][c.x1 + accx].v) {
 		
-		var accY = 1
+		var accY = 0
 		repeat {
 			accY += 1
 		} while c.y1 + accY < grid.count && !grid[c.y1 + accY][c.x1].h
