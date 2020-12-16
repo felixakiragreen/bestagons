@@ -8,53 +8,109 @@
 import SwiftUI
 
 struct ContentView: View {
-	let apparatus = ApparatusGenerator(
-		width: 8, height: 8, colorMode: .random
-	)
+	@State var apparatus = ApparatusGenerator(width: 2, height: 2)
+	@State var rects = [BlockRect]()
 	
-//	TODO: add options
-	
-	@State var rects: [BlockRect] = [BlockRect]()
+	@State var optWidth: Double = 2.0
+	@State var optHeight: Double = 2.0
 	
 	var body: some View {
+		let cellSize = 16
 		
+//		let frameWidth = apparatus.xDim * cellSize
 		
-		let cellSize = 8
-		
-		VStack(alignment: .leading) {
-			HStack(alignment: .top) {
-				Text("Apparatus")
-					.padding()
-					
-				Button(action: {
-					self.regenerate()
-				}) {
-					Text("regenerate")
-				}
+		VStack {
+			Text("Apparatus")
+				.font(.largeTitle)
 				.padding()
-				Spacer()
-			}
-			.onAppear {
-				self.regenerate()
-			}
-			Spacer()
-			
-			ZStack {
-				ForEach(rects, id: \.id) { rect in
-					Rectangle()
-						.frame(width: CGFloat(cellSize * rect.w + 1), height: CGFloat(cellSize * rect.h + 1), alignment: .center)
-						.foregroundColor(rect.clr.opacity(0.5))
-						.border(Color.black, width: 1)
-						.offset(x: CGFloat(cellSize * 2 * rect.x1 - 1), y: CGFloat(cellSize * 2 * rect.y1 - 1))
+				.onAppear {
+					self.regenerate()
 				}
-			}.offset(x: 0.0, y: -300.0)
-			.animation(.spring())
-		}.frame(maxWidth: 800, maxHeight: 800)
+			
+			HStack(spacing: 16.0) {
+				VStack {
+					Text("Options")
+						.font(.headline)
+				
+					GroupBox(label: Text("top level")) {
+						VStack {
+							Slider(value: $optWidth, in: 1 ... 16, step: 1) {
+								Text("width: \(optWidth, specifier: "%.0f")")
+									.frame(width: 60, alignment: .leading)
+									
+							}
+							.padding(.horizontal)
+							.onChange(of: optWidth, perform: { value in
+								self.regenerate()
+							})
+							Slider(value: $optHeight, in: 1 ... 16, step: 1) {
+								Text("height: \(optHeight, specifier: "%.0f")")
+									.frame(width: 60, alignment: .leading)
+							}
+							.padding(.horizontal)
+							.onChange(of: optHeight, perform: { value in
+								self.regenerate()
+							})
+						
+							
+						}
+					}
+					
+					Spacer()
+					Button(action: {
+						self.regenerate()
+					}) {
+						Text("Regenerate")
+					}
+					.padding()
+				}//: VSTACK - Options
+				.frame(width: 320)
+			
+				VStack {
+					ZStack(alignment: .topLeading) {
+						ForEach(rects, id: \.id) { rect in
+							let w = CGFloat(rect.w * cellSize + 0)
+							let h = CGFloat(rect.h * cellSize + 0)
+							let x = CGFloat(rect.x1 * cellSize - 0)
+							let y = CGFloat(rect.y1 * cellSize - 0)
+							
+							Rectangle()
+								.foregroundColor(rect.clr.opacity(0.5))
+								.frame(width: w, height: h)
+								.border(Color.black.opacity(0.5), width: 1)
+								.overlay(
+									Text("\(rect.id)")
+										.font(.caption)
+								)
+								.offset(x: x, y: y)
+						}
+					}
+					.frame(
+						width: CGFloat(apparatus.xDim * cellSize),
+						height: CGFloat(apparatus.yDim * cellSize),
+						alignment: .topLeading
+					)
+					.padding([.bottom, .trailing], CGFloat(cellSize))
+					.padding(.bottom, CGFloat(cellSize))
+					//			.offset(x: 100.0, y: -200.0)
+					.animation(.spring())
+				}//: VSTACK Apparatus
+			}.padding(32.0)
+		}
+//		.frame(maxWidth: 800, maxHeight: 800)
 	}
 	
-	func regenerate() -> Void {
+	func regenerate() {
+		apparatus = ApparatusGenerator(
+			width: optWidth,
+			height: optHeight,
+			colorMode: .random
+		)
+		
 		let grid = apparatus.generate()
+		print(grid)
 		rects = convertLineGridToRect(grid: grid)
+		print(rects)
 	}
 }
 
