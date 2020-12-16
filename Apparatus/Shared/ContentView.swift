@@ -45,11 +45,11 @@ struct ContentView: View {
 							Rectangle()
 								.foregroundColor(rect.clr.opacity(0.5))
 								.frame(width: w, height: h)
-								.border(Color.black.opacity(0.5), width: 1)
-//								.overlay(
-//									Text("\(rect.id)")
-//										.font(.caption)
-//								)
+								.border(Color.black.opacity(0.5), width: options.showStroke ? 1 : 0)
+								.overlay(options.showDebug ? Text("\(rect.id)")
+										.font(.caption)
+									: nil
+								)
 								.offset(x: x, y: y)
 						}
 					}
