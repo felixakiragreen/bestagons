@@ -15,6 +15,8 @@
 		1D8D0726258860C80061CE7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D8D0710258860C80061CE7C /* Assets.xcassets */; };
 		1D8D0732258860D90061CE7C /* ApparatusBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D0731258860D90061CE7C /* ApparatusBuilder.swift */; };
 		1D8D0733258860D90061CE7C /* ApparatusBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D0731258860D90061CE7C /* ApparatusBuilder.swift */; };
+		1D8D0739258A847E0061CE7C /* ApparatusOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D0738258A847E0061CE7C /* ApparatusOptions.swift */; };
+		1D8D073A258A847E0061CE7C /* ApparatusOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D0738258A847E0061CE7C /* ApparatusOptions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +29,7 @@
 		1D8D071F258860C80061CE7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1D8D0720258860C80061CE7C /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		1D8D0731258860D90061CE7C /* ApparatusBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApparatusBuilder.swift; sourceTree = "<group>"; };
+		1D8D0738258A847E0061CE7C /* ApparatusOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApparatusOptions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +67,7 @@
 				1D8D070F258860C60061CE7C /* ContentView.swift */,
 				1D8D0710258860C80061CE7C /* Assets.xcassets */,
 				1D8D0731258860D90061CE7C /* ApparatusBuilder.swift */,
+				1D8D0738258A847E0061CE7C /* ApparatusOptions.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -193,6 +197,7 @@
 			files = (
 				1D8D0723258860C80061CE7C /* ContentView.swift in Sources */,
 				1D8D0732258860D90061CE7C /* ApparatusBuilder.swift in Sources */,
+				1D8D0739258A847E0061CE7C /* ApparatusOptions.swift in Sources */,
 				1D8D0721258860C80061CE7C /* ApparatusApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -203,6 +208,7 @@
 			files = (
 				1D8D0724258860C80061CE7C /* ContentView.swift in Sources */,
 				1D8D0733258860D90061CE7C /* ApparatusBuilder.swift in Sources */,
+				1D8D073A258A847E0061CE7C /* ApparatusOptions.swift in Sources */,
 				1D8D0722258860C80061CE7C /* ApparatusApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
