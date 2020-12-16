@@ -6,41 +6,18 @@
 //
 
 import SwiftUI
-
-struct ApparatusBuilder: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-struct ApparatusBuilder_Previews: PreviewProvider {
-    static var previews: some View {
-        ApparatusBuilder()
-    }
-}
+import GameplayKit
 
 /**
 TODOs
 
-v1.0 → simplest form workibg
-v2.0 → all features from ApparatusGenerator
+all features from ApparatusGenerator
 
-# v1.0
-
-- all the blockSet functions
-
-
-
-v1.1
-
+seed
+noise
 symmetry
 
-# v2.0
-
-- noise generator
--
-
-
+initialTop & Left
 
 */
 
@@ -121,11 +98,14 @@ class ApparatusGenerator {
 	var roundness: Double
 	var solidness: Double
 	
+	// TODO: rename to Square?
 	var simple: Bool
+
+	// TODO: rename
 //	var simplex: ...
 //	var rateOfChange: Double
 	
-	var globalSeed: Double
+	var seed: Int
 	
 //	--
 	var idX: Int
@@ -152,9 +132,10 @@ class ApparatusGenerator {
 		],
 		colorMode: ColorMode = .group,
 		groupSize: Double = 0.8,
-		simple: Bool = true
-//		simplex
+		simple: Bool = true,
+		randomSimple: Bool = false,
 //		rateOfChange: Double = 0.01
+		seed: Int = 0
 	) {
 		self.xDim = Int(round(width * 2 + 11))
 		self.yDim = Int(round(height * 2 + 11))
@@ -171,7 +152,7 @@ class ApparatusGenerator {
 		self.roundness = roundness
 		self.solidness = solidness
 		self.simple = simple
-		self.globalSeed = Double.random(in: 0.0...1.0) // TODO: update to noise func
+		self.seed = seed
 
 		//
 		self.idX = 0
@@ -446,7 +427,16 @@ class ApparatusGenerator {
 		nZ: String
 	) -> Double {
 		// TODO: use GKNoiseMap (if simplex)
-		return Double.random(in: 0.0...1.0)
+		
+//		TODO: if ...
+		
+		let randomSeed = "\(seed)\(nX)\(nY)\(nZ)".data(using: .utf8)!
+		
+		let randomSource = GKARC4RandomSource.init(seed: randomSeed)
+		
+		return Double(randomSource.nextUniform())
+		
+//		return Double.random(in: 0.0...1.0)
 	}
 	
 //	func getRandomElement(<#parameters#>) -> <#return type#> {
