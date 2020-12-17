@@ -81,17 +81,17 @@ struct ContentView: View {
 		apparatus = ApparatusGenerator(config: config)
 		//	print(config)
 		let grid = apparatus.generate()
-		// print(grid)
+		print(grid)
 		rects = convertLineGridToRect(grid: grid)
-		// print(rects)
+		print(rects)
 	}
 	
 	func regenerate() {
 		if !options.preserveSeed {
-			config.seed = Int.random(in: 0...Int.max)
+			config.seed = Int.random(in: 0 ... Int.max)
 		}
 		
-		self.update()
+		update()
 	}
 }
 

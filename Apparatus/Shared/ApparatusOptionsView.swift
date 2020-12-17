@@ -112,7 +112,7 @@ struct ApparatusOptionsView: View {
 		} //: VSTACK
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.onChange(of: config, perform: { opt in
-			print(opt)
+//			print(opt)
 			if let update = self.onChange {
 				update(opt)
 			}
