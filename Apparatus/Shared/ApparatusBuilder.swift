@@ -114,51 +114,31 @@ class ApparatusGenerator {
 	var idCounter: Int
 //	--
 	
-	// init
 	init(
-		width: Double,
-		height: Double,
-		initiateChance: Double = 0.8,
-		extensionChance: Double = 0.8,
-		verticalChance: Double = 0.8,
-		horizontalSymmetry: Bool = true,
-		verticalSymmetry: Bool = false,
-		roundness: Double = 0.1,
-		solidness: Double = 0.5,
-		colors: [Color] = [
-			Color.blue,
-			Color.purple,
-			Color.green,
-		],
-		colorMode: ColorMode = .group,
-		groupSize: Double = 0.8,
-		simple: Bool = true,
-		randomSimple: Bool = false,
-//		rateOfChange: Double = 0.01
-		seed: Int = 0
+		config: ApparatusConfig
 	) {
-		self.xDim = Int(round(width * 2 + 11))
-		self.yDim = Int(round(height * 2 + 11))
-		self.xRadius = width
-		self.yRadius = height
-		self.chanceNew = initiateChance
-		self.chanceExtend = extensionChance
-		self.chanceVertical = verticalChance
-		self.colors = colors
-		self.colorMode = colorMode
-		self.groupSize = groupSize
-		self.hSymmetric = horizontalSymmetry
-		self.vSymmetric = verticalSymmetry
-		self.roundness = roundness
-		self.solidness = solidness
-		self.simple = simple
-		self.seed = seed
+		self.xDim = Int(round(config.cellCountX * 2 + 11))
+		self.yDim = Int(round(config.cellCountY * 2 + 11))
+		self.xRadius = config.cellCountX
+		self.yRadius = config.cellCountY
+		self.chanceNew = config.chanceNew
+		self.chanceExtend = config.chanceExtend
+		self.chanceVertical = config.chanceVertical
+		self.colors = config.colors
+		self.colorMode = config.colorMode
+		self.groupSize = config.groupSize
+		self.hSymmetric = config.hSymmetric
+		self.vSymmetric = config.vSymmetric
+		self.roundness = config.roundness
+		self.solidness = config.solidness
+		self.simple = config.simple
+		self.seed = config.seed
 
 		//
 		self.idX = 0
 		self.idY = 0
 		self.idCounter = 0
-		self.colorMain = colors.randomElement() ?? Color.red
+		self.colorMain = config.colors.randomElement() ?? Color.red
 	}
 	
 	func getIdAndIncrement() -> Int {

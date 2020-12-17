@@ -8,21 +8,28 @@
 import SwiftUI
 
 struct ContentView: View {
-	@State var apparatus = ApparatusGenerator(width: 2, height: 2)
+	@State var apparatus = ApparatusGenerator(config: ApparatusConfig())
 	@State var rects = [BlockRect]()
 	
 	@State var options = ApparatusOptions()
+	@State var config = ApparatusConfig()
 	
 	var body: some View {
+		let cell = CGFloat(config.cellSize)
+		
 		VStack {
 			HStack(spacing: 16.0) {
 				VStack {
 					Text("Options")
 						.font(.headline)
 				
-					ApparatusOptionsView(options: $options, onChange: { _ in
-						self.regenerate()
-					})
+					ApparatusOptionsView(
+						config: $config,
+						options: $options,
+						onChange: { _ in
+							self.regenerate()
+						}
+					)
 
 					Spacer()
 					Button(action: {
@@ -31,38 +38,38 @@ struct ContentView: View {
 						Text("Regenerate")
 					}
 					.padding()
-				}//: VSTACK - Options
+				} //: VSTACK - Options
 				.frame(width: 320)
 			
 				VStack {
 					ZStack(alignment: .topLeading) {
 						ForEach(rects, id: \.id) { rect in
-							let w = CGFloat(rect.w) * CGFloat(options.cellSize)
-							let h = CGFloat(rect.h) * CGFloat(options.cellSize)
-							let x = CGFloat(rect.x1) * CGFloat(options.cellSize)
-							let y = CGFloat(rect.y1) * CGFloat(options.cellSize)
+							let w = CGFloat(rect.w) * cell
+							let h = CGFloat(rect.h) * cell
+							let x = CGFloat(rect.x1) * cell
+							let y = CGFloat(rect.y1) * cell
 							
 							Rectangle()
-								.foregroundColor(rect.clr.opacity(0.5))
+								.foregroundColor(rect.clr.opacity(options.showFill ? 0.5 : 0))
 								.frame(width: w, height: h)
 								.border(Color.black.opacity(0.5), width: options.showStroke ? 1 : 0)
 								.overlay(options.showDebug ? Text("\(rect.id)")
-										.font(.caption)
+									.font(.caption)
 									: nil
 								)
 								.offset(x: x, y: y)
 						}
 					}
 					.frame(
-						width: CGFloat(Double(apparatus.xDim) * options.cellSize),
-						height: CGFloat(Double(apparatus.yDim) * options.cellSize),
+						width: CGFloat(apparatus.xDim) * cell,
+						height: CGFloat(apparatus.yDim) * cell,
 						alignment: .topLeading
 					)
-					.padding([.bottom, .trailing], CGFloat(options.cellSize))
-					.padding(.bottom, CGFloat(options.cellSize))
+					.padding([.bottom, .trailing], cell)
+					.padding(.bottom, cell)
 					.animation(.spring())
-				}//: VSTACK - Apparatus
-			}//: VSTACK - Top
+				} //: VSTACK - Apparatus
+			} //: VSTACK - Top
 			.onAppear {
 				self.regenerate()
 			}
@@ -72,10 +79,7 @@ struct ContentView: View {
 	
 	func regenerate() {
 		apparatus = ApparatusGenerator(
-			width: options.cellCountX,
-			height: options.cellCountY,
-			colorMode: options.colorMode,
-			seed: options.seed
+			config: config
 		)
 		
 		let grid = apparatus.generate()

@@ -8,72 +8,69 @@
 import SwiftUI
 
 struct ApparatusOptionsView: View {
+	@Binding var config: ApparatusConfig
 	@Binding var options: ApparatusOptions
 	
-	var onChange: ((ApparatusOptions) -> Void)?
-
-//	func onChanged(perform action: (ApparatusOptions) -> ApparatusOptions) {
-//		return action
-//	}
+	var onChange: ((ApparatusConfig) -> Void)?
 	
 	var body: some View {
 		VStack {
 			GroupBox(label: Text("shape")) {
 				VStack {
 					Slideridoo(
-						value: $options.cellSize,
+						value: $config.cellSize,
 						range: 1...16,
 						step: 1,
 						label: "size"
 					)
 					Slideridoo(
-						value: $options.cellCountX,
+						value: $config.cellCountX,
 						range: 1...16,
 						step: 1,
 						label: "width"
 					)
 					Slideridoo(
-						value: $options.cellCountY,
+						value: $config.cellCountY,
 						range: 1...16,
 						step: 1,
 						label: "height"
 					)
 					HStack {
-						Toggle(isOn: $options.simple) {
+						Toggle(isOn: $config.simple) {
 							Text("square")
 						}
 						Spacer()
-						Toggle(isOn: $options.hSymmetric) {
+						Toggle(isOn: $config.hSymmetric) {
 							Text("h_symm")
 						}
 						Spacer()
-						Toggle(isOn: $options.vSymmetric) {
+						Toggle(isOn: $config.vSymmetric) {
 							Text("v symm")
 						}
 					}.padding(.horizontal)
 					Slideridoo(
-						value: $options.roundness,
+						value: $config.roundness,
 						range: 0...1,
 //						step: 0.1,
 						label: "round-y"
 					)
 					Slideridoo(
-						value: $options.solidness,
+						value: $config.solidness,
 						range: 0...1,
 						label: "solid-y"
 					)
 					Slideridoo(
-						value: $options.chanceNew,
+						value: $config.chanceNew,
 						range: 0...1,
 						label: "compact-y"
 					)
 					Slideridoo(
-						value: $options.chanceExtend,
+						value: $config.chanceExtend,
 						range: 0...1,
 						label: "expand-y"
 					)
 					Slideridoo(
-						value: $options.chanceVertical,
+						value: $config.chanceVertical,
 						range: 0...1,
 						label: "vertical-y"
 					)
@@ -107,7 +104,7 @@ struct ApparatusOptionsView: View {
 				}
 			}//: GROUPBOX - randomness
 		}
-		.onChange(of: options, perform: { opt in
+		.onChange(of: config, perform: { opt in
 			print(opt)
 			if let update = self.onChange {
 				update(opt)
@@ -121,6 +118,7 @@ struct ApparatusOptionsView: View {
 struct ApparatusOptionsView_Previews: PreviewProvider {
 	static var previews: some View {
 		ApparatusOptionsView(
+			config: .constant(ApparatusConfig()),
 			options: .constant(ApparatusOptions())
 		)
 	}
@@ -156,7 +154,7 @@ struct Slideridoo: View {
 
 // MARK: - CONFIG
 
-struct ApparatusOptions: Equatable {
+struct ApparatusConfig: Equatable {
 	var cellSize: Double
 
 	var cellCountX: Double
@@ -170,20 +168,15 @@ struct ApparatusOptions: Equatable {
 
 	var colorMode: ColorMode
 	var groupSize: Double
-
-	var hSymmetric: Bool
-	var vSymmetric: Bool
-
 	var roundness: Double
 	var solidness: Double
 
+	var hSymmetric: Bool
+	var vSymmetric: Bool
+	
 	var simple: Bool
-	var showStroke: Bool
-	var showFill: Bool
-	var showDebug: Bool
 	//	var simplex: ...
 	//	var rateOfChange: Double
-
 	var seed: Int
 
 	init(
@@ -205,9 +198,6 @@ struct ApparatusOptions: Equatable {
 		colorMode: ColorMode = .random,
 		groupSize: Double = 0.8,
 		simple: Bool = true,
-		stroke: Bool = false,
-		fill: Bool = true,
-		debug: Bool = false,
 //		randomSimple: Bool = false,
 //		rateOfChange: Double = 0.01
 		seed: Int = 0
@@ -226,9 +216,24 @@ struct ApparatusOptions: Equatable {
 		self.roundness = roundness
 		self.solidness = solidness
 		self.simple = simple
-		self.showStroke = stroke
-		self.showFill = fill
-		self.showDebug = debug
 		self.seed = seed
 	}
 }
+
+struct ApparatusOptions: Equatable {
+
+	var showStroke: Bool
+	var showFill: Bool
+	var showDebug: Bool
+
+	init(
+		stroke: Bool = true,
+		fill: Bool = true,
+		debug: Bool = false
+	) {
+		self.showStroke = stroke
+		self.showFill = fill
+		self.showDebug = debug
+	}
+}
+
