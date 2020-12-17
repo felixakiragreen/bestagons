@@ -17,63 +17,67 @@ struct ContentView: View {
 	var body: some View {
 		let cell = CGFloat(config.cellSize)
 		
-		VStack {
-			HStack(spacing: 16.0) {
-				VStack {
-					Text("Options")
-						.font(.headline)
-				
-					ApparatusOptionsView(
-						config: $config,
-						options: $options,
-						onChange: { _ in
-							self.update()
-						}
-					)
+		ZStack {
+			Color("grey.800")
+		
+			VStack {
+				HStack(spacing: 16.0) {
+					VStack {
+						Text("Options")
+							.font(.headline)
+					
+						ApparatusOptionsView(
+							config: $config,
+							options: $options,
+							onChange: { _ in
+								self.update()
+							}
+						)
 
-					Spacer()
-					Button(action: {
-						self.regenerate()
-					}) {
-						Text("Regenerate")
-					}
-					.padding()
-				} //: VSTACK - Options
-				.frame(width: 320)
-			
-				VStack {
-					ZStack(alignment: .topLeading) {
-						ForEach(rects, id: \.id) { rect in
-							let w = CGFloat(rect.w) * cell
-							let h = CGFloat(rect.h) * cell
-							let x = CGFloat(rect.x1) * cell
-							let y = CGFloat(rect.y1) * cell
-							
-							Rectangle()
-								.foregroundColor(rect.clr.opacity(options.showFill ? 0.5 : 0))
-								.frame(width: w, height: h)
-								.border(Color.black.opacity(0.5), width: options.showStroke ? 1 : 0)
-								.overlay(options.showDebug ? Text("\(rect.id)")
-									.font(.caption)
-									: nil
-								)
-								.offset(x: x, y: y)
+						Spacer()
+						Button(action: {
+							self.regenerate()
+						}) {
+							Text("Regenerate")
 						}
-					}
-					.frame(
-						width: CGFloat(apparatus.xDim) * cell,
-						height: CGFloat(apparatus.yDim) * cell,
-						alignment: .topLeading
-					)
-					.padding([.bottom, .trailing], cell)
-					.padding(.bottom, cell)
-					.animation(.default)
-				} //: VSTACK - Apparatus
-			} //: VSTACK - Top
-			.onAppear {
-				self.update()
+						.padding()
+					} //: VSTACK - Options
+					.frame(width: 320)
+				
+					VStack {
+						ZStack(alignment: .topLeading) {
+							ForEach(rects, id: \.id) { rect in
+								let w = CGFloat(rect.w) * cell
+								let h = CGFloat(rect.h) * cell
+								let x = CGFloat(rect.x1) * cell
+								let y = CGFloat(rect.y1) * cell
+								
+								Rectangle()
+									.foregroundColor(rect.clr.opacity(options.showFill ? 0.5 : 0))
+									.frame(width: w, height: h)
+									.border(Color.black.opacity(0.5), width: options.showStroke ? 1 : 0)
+									.overlay(options.showDebug ? Text("\(rect.id)")
+										.font(.caption)
+										: nil
+									)
+									.offset(x: x, y: y)
+							}
+						}
+						.frame(
+							width: CGFloat(apparatus.xDim) * cell,
+							height: CGFloat(apparatus.yDim) * cell,
+							alignment: .topLeading
+						)
+						.padding([.bottom, .trailing], cell)
+						.padding(.bottom, cell)
+						.animation(.default)
+					} //: VSTACK - Apparatus
+				} //: VSTACK - Top
+				.onAppear {
+					self.update()
+				}
+				.padding(32.0)
 			}
-			.padding(32.0)
 		}
 	}
 	
@@ -81,9 +85,9 @@ struct ContentView: View {
 		apparatus = ApparatusGenerator(config: config)
 		//	print(config)
 		let grid = apparatus.generate()
-		print(grid)
+//		print(grid)
 		rects = convertLineGridToRect(grid: grid)
-		print(rects)
+//		print(rects)
 	}
 	
 	func regenerate() {
