@@ -30,44 +30,40 @@ enum ColorMode {
 struct Block {
 	var h: Bool
 	var v: Bool
-	var ind: Bool // indent? TODO:
-	var clr: Color?
+	var inside: Bool /// inside / within / contained
+	var color: Color?
 	var id: Int?
 	
 	init(
 		h: Bool = false,
 		v: Bool = false,
-		ind: Bool = false,
-		clr: Color? = nil,
+		inside: Bool = false,
+		color: Color? = nil,
 		id: Int? = nil
 	) {
 		self.h = h
 		self.v = v
-		self.ind = ind
+		self.inside = inside
 		
-		if let clr = clr {
-			self.clr = clr
+		if let color = color {
+			self.color = color
 		}
 		if let id = id {
 			self.id = id
 		}
 	}
-	
-//	func copy(h: Bool? = nil, v: Bool? = nil) -> Block {
-//		return Block(h: h ?? self.h, v: v ?? self.v, ind: self.ind, clr: self.clr, id: self.id)
-//	}
+
 	init(block: Block, h: Bool? = nil, v: Bool? = nil, id: Int? = nil) {
 		self.h = h ?? block.h
 		self.v = v ?? block.v
-		self.ind = block.ind
+		self.inside = block.inside
 		
-		if let clr = block.clr {
-			self.clr = clr
+		if let color = block.color {
+			self.color = color
 		}
 		if let id = id ?? block.id {
 			self.id = id
 		}
-//		return Block(h: h ?? self.h, v: v ?? self.v, ind: self.ind, clr: self.clr, id: self.id)
 	}
 }
 
@@ -75,7 +71,7 @@ struct Block {
 struct BlockCorner {
 	var x1: Int
 	var y1: Int
-	var clr: Color
+	var color: Color
 	var id: Int
 }
 
@@ -84,7 +80,7 @@ struct BlockRect {
 	var y1: Int
 	var w: Int
 	var h: Int
-	var clr: Color
+	var color: Color
 	var id: Int
 }
 
@@ -241,25 +237,25 @@ class ApparatusGenerator {
 		top: Block
 	) -> Block {
 		
-		if !left.ind && !top.ind {
+		if !left.inside && !top.inside {
 			return blockSet1(x: x, y: y)
 		}
 		
-		if left.ind && !top.ind {
+		if left.inside && !top.inside {
 			if left.h {
 				return blockSet3(x: x, y: y, left: left)
 			}
 			return blockSet2(x: x, y: y)
 		}
 		
-		if !left.ind && top.ind {
+		if !left.inside && top.inside {
 			if top.v {
 				return blockSet5(x: x, y: y, top: top)
 			}
 			return blockSet4(x: x, y: y)
 		}
 		
-		if left.ind && top.ind {
+		if left.inside && top.inside {
 			if !left.h && !top.v {
 				return blockSet6(left: left)
 			}
@@ -295,7 +291,7 @@ class ApparatusGenerator {
 	
 	func blockSet3(x: Int, y: Int, left: Block) -> Block {
 		if extend(x: x, y: y) {
-			return Block(h: true, ind: true, clr: left.clr, id: left.id)
+			return Block(h: true, inside: true, color: left.color, id: left.id)
 		}
 		return blockSet2(x: x, y: x)
 	}
@@ -309,18 +305,18 @@ class ApparatusGenerator {
 	
 	func blockSet5(x: Int, y: Int, top: Block) -> Block {
 		if extend(x: x, y: y) {
-			return Block(v: true, ind: true, clr: top.clr, id: top.id)
+			return Block(v: true, inside: true, color: top.color, id: top.id)
 		}
 		return blockSet4(x: x, y: x)
 	}
 	
 	func blockSet6(left: Block) -> Block {
-		return Block(ind: true, clr: left.clr, id: left.id)
+		return Block(inside: true, color: left.color, id: left.id)
 	}
 	
 	func blockSet7(x: Int, y: Int, left: Block) -> Block {
 		if extend(x: x, y: y) {
-			return Block(h: true, ind: true, clr: left.clr, id: left.id)
+			return Block(h: true, inside: true, color: left.color, id: left.id)
 		}
 		if startNew(x: x, y: y) {
 			return newBlock(nX: x, nY: y)
@@ -330,7 +326,7 @@ class ApparatusGenerator {
 	
 	func blockSet8(x: Int, y: Int, top: Block) -> Block {
 		if extend(x: x, y: y) {
-			return Block(v: true, ind: true, clr: top.clr, id: top.id)
+			return Block(v: true, inside: true, color: top.color, id: top.id)
 		}
 		if startNew(x: x, y: y) {
 			return newBlock(nX: x, nY: y)
@@ -340,9 +336,9 @@ class ApparatusGenerator {
 	
 	func blockSet9(x: Int, y: Int, top: Block, left: Block) -> Block {
 		if verticalDir(x: x, y: y) {
-			return Block(v: true, ind: true, clr: top.clr, id: top.id)
+			return Block(v: true, inside: true, color: top.color, id: top.id)
 		}
-		return Block(h: true, ind: true, clr: left.clr, id: left.id)
+		return Block(h: true, inside: true, color: left.color, id: left.id)
 	}
 
 	// MARK: - NEW BLOCK
@@ -352,7 +348,7 @@ class ApparatusGenerator {
 	) -> Block {
 		//	TODO: determine color based on noise
 		
-		var clr: Color {
+		var color: Color {
 			switch colorMode {
 			case .random:
 				return colors.randomElement() ?? Color.red
@@ -370,7 +366,7 @@ class ApparatusGenerator {
 		
 		let id = getIdAndIncrement()
 		
-		return Block(h: true, v: true, ind: true, clr: clr, id: id)
+		return Block(h: true, v: true, inside: true, color: color, id: id)
 	}
 	
 	
@@ -474,15 +470,15 @@ func getNWCorners(grid: [[Block]]) -> [BlockCorner] {
 //	for column in grid {
 //		for cell in column {
 //			if cell.h && cell.v && cell.ind {
-//				nwCorners.append(BlockRect(x1: cell, y1: <#T##Int#>, clr: <#T##Color#>, id: <#T##Int#>))
+//				nwCorners.append(BlockRect(x1: cell, y1: <#T##Int#>, color: <#T##Color#>, id: <#T##Int#>))
 //			}
 //		}
 //	}
 	for i in grid.indices {
 		for j in grid[i].indices {
 			let cell = grid[i][j]
-			if cell.h && cell.v && cell.ind {
-				nwCorners.append(BlockCorner(x1: j, y1: i, clr: cell.clr ?? Color.orange, id: cell.id ?? 9999))
+			if cell.h && cell.v && cell.inside {
+				nwCorners.append(BlockCorner(x1: j, y1: i, color: cell.color ?? Color.orange, id: cell.id ?? 9999))
 			}
 		}
 	}
@@ -505,6 +501,6 @@ func extendCornersToRect(grid: [[Block]], corners: [BlockCorner]) -> [BlockRect]
 		} while c.y1 + accY < grid.count && !grid[c.y1 + accY][c.x1].h
 		// (c.y1 + accy < grid.length && !grid[c.y1 + accy][c.x1].h)
 		
-		return BlockRect(x1: c.x1, y1: c.y1, w: accX, h: accY, clr: c.clr, id: c.id)
+		return BlockRect(x1: c.x1, y1: c.y1, w: accX, h: accY, color: c.color, id: c.id)
 	}
 }

@@ -53,7 +53,7 @@ struct ContentView: View {
 								let y = CGFloat(rect.y1) * cell
 								
 								Rectangle()
-									.foregroundColor(rect.clr.opacity(options.showFill ? 0.5 : 0))
+									.foregroundColor(rect.color.opacity(options.showFill ? 0.5 : 0))
 									.frame(width: w, height: h)
 									.border(Color.black.opacity(0.5), width: options.showStroke ? 1 : 0)
 									.overlay(options.showDebug ? Text("\(rect.id)")
