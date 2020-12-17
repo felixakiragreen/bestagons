@@ -27,7 +27,7 @@ struct ContentView: View {
 						config: $config,
 						options: $options,
 						onChange: { _ in
-							self.regenerate()
+							self.update()
 						}
 					)
 
@@ -67,25 +67,31 @@ struct ContentView: View {
 					)
 					.padding([.bottom, .trailing], cell)
 					.padding(.bottom, cell)
-					.animation(.spring())
+					.animation(.default)
 				} //: VSTACK - Apparatus
 			} //: VSTACK - Top
 			.onAppear {
-				self.regenerate()
+				self.update()
 			}
 			.padding(32.0)
 		}
 	}
 	
-	func regenerate() {
-		apparatus = ApparatusGenerator(
-			config: config
-		)
-		
+	func update() {
+		apparatus = ApparatusGenerator(config: config)
+		//	print(config)
 		let grid = apparatus.generate()
 		// print(grid)
 		rects = convertLineGridToRect(grid: grid)
 		// print(rects)
+	}
+	
+	func regenerate() {
+		if !options.preserveSeed {
+			config.seed = Int.random(in: 0...Int.max)
+		}
+		
+		self.update()
 	}
 }
 

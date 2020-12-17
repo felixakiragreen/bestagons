@@ -5,14 +5,15 @@
 //  Created by Felix Akira Green on 12/16/20.
 //
 
+import Combine
 import SwiftUI
 
 struct ApparatusOptionsView: View {
 	@Binding var config: ApparatusConfig
 	@Binding var options: ApparatusOptions
-	
+
 	var onChange: ((ApparatusConfig) -> Void)?
-	
+
 	var body: some View {
 		VStack {
 			GroupBox(label: Text("shape")) {
@@ -36,34 +37,13 @@ struct ApparatusOptionsView: View {
 						label: "height"
 					)
 					HStack {
-						Toggle(isOn: $config.simple) {
-							Text("square")
-						}
-						Spacer()
 						Toggle(isOn: $config.hSymmetric) {
-							Text("h_symm")
+							Text("horizontal symmetry")
 						}
-						Spacer()
 						Toggle(isOn: $config.vSymmetric) {
-							Text("v symm")
+							Text("vertical symmetry")
 						}
 					}.padding(.horizontal)
-					Slideridoo(
-						value: $config.roundness,
-						range: 0...1,
-//						step: 0.1,
-						label: "round-y"
-					)
-					Slideridoo(
-						value: $config.solidness,
-						range: 0...1,
-						label: "solidness"
-					)
-					Slideridoo(
-						value: $config.chanceNew,
-						range: 0...1,
-						label: "compact"
-					)
 					Slideridoo(
 						value: $config.chanceExtend,
 						range: 0...1,
@@ -74,8 +54,33 @@ struct ApparatusOptionsView: View {
 						range: 0...1,
 						label: "verticality"
 					)
+					HStack {
+						Toggle(isOn: $config.simple) {
+							Text("keep it simple (square)")
+						}
+					}.padding(.horizontal)
+					Group {
+						if !config.simple {
+							Slideridoo(
+								value: $config.roundness,
+								range: 0...1,
+								label: "round-y"
+							)
+							Slideridoo(
+								value: $config.solidness,
+								range: 0...1,
+								label: "solidness"
+							)
+							Slideridoo(
+								value: $config.chanceNew,
+								range: 0...1,
+								label: "compact"
+							)
+						}
+					}.animation(.default)
 				}
-			}//: GROUPBOX - shape
+			} //: GROUPBOX - shape
+
 			GroupBox(label: Text("look")) {
 				VStack {
 					HStack {
@@ -92,18 +97,20 @@ struct ApparatusOptionsView: View {
 						}
 					}.padding(.horizontal)
 				}
-			}//: GROUPBOX - look
-			
+			} //: GROUPBOX - look
+
 			GroupBox(label: Text("randomness")) {
 				VStack {
 					HStack {
-						Text("TODO")
-//						SEED
-						//			TODO: TOGGLE preverse Seed on regenerate
+						IntField(value: $config.seed)
+						Toggle(isOn: $options.preserveSeed) {
+							Text("preserveSeed")
+						}
 					}.padding(.horizontal)
 				}
-			}//: GROUPBOX - randomness
-		}
+			} //: GROUPBOX - randomness
+		} //: VSTACK
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.onChange(of: config, perform: { opt in
 			print(opt)
 			if let update = self.onChange {
@@ -121,6 +128,7 @@ struct ApparatusOptionsView_Previews: PreviewProvider {
 			config: .constant(ApparatusConfig()),
 			options: .constant(ApparatusOptions())
 		)
+		.frame(height: 900)
 	}
 }
 
@@ -161,6 +169,32 @@ struct Slideridoo: View {
 	}
 }
 
+struct IntField: View {
+	@Binding var value: Int
+
+	var valueProxy: Binding<String> {
+		Binding<String>(
+			get: { self.toString(from: self.value) },
+			set: {
+				if let num = NumberFormatter().number(from: $0) {
+					self.value = num.intValue
+				}
+			}
+		)
+	}
+
+	var body: some View {
+		TextField("", text: valueProxy)
+	}
+
+	private func toString(from value: Int) -> String {
+		guard let s = NumberFormatter().string(from: NSNumber(value: value)) else {
+			return ""
+		}
+		return s
+	}
+}
+
 // MARK: - CONFIG
 
 struct ApparatusConfig: Equatable {
@@ -182,7 +216,7 @@ struct ApparatusConfig: Equatable {
 
 	var hSymmetric: Bool
 	var vSymmetric: Bool
-	
+
 	var simple: Bool
 	//	var simplex: ...
 	//	var rateOfChange: Double
@@ -194,8 +228,8 @@ struct ApparatusConfig: Equatable {
 		height: Double = 8,
 		initiateChance: Double = 0.8,
 		extensionChance: Double = 0.8,
-		verticalChance: Double = 0.8,
-		horizontalSymmetry: Bool = true,
+		verticalChance: Double = 0.5,
+		horizontalSymmetry: Bool = false,
 		verticalSymmetry: Bool = false,
 		roundness: Double = 0.1,
 		solidness: Double = 0.5,
@@ -230,19 +264,20 @@ struct ApparatusConfig: Equatable {
 }
 
 struct ApparatusOptions: Equatable {
-
 	var showStroke: Bool
 	var showFill: Bool
 	var showDebug: Bool
+	var preserveSeed: Bool
 
 	init(
 		stroke: Bool = true,
 		fill: Bool = true,
-		debug: Bool = false
+		debug: Bool = false,
+		preserveSeed: Bool = true
 	) {
 		self.showStroke = stroke
 		self.showFill = fill
 		self.showDebug = debug
+		self.preserveSeed = preserveSeed
 	}
 }
-
