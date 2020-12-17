@@ -234,9 +234,12 @@ struct ApparatusConfig: Equatable {
 		roundness: Double = 0.1,
 		solidness: Double = 0.5,
 		colors: [Color] = [
-			Color.blue,
-			Color.purple,
-			Color.green,
+			Color("red.500"),
+			Color("orange.500"),
+			Color("yellow.500"),
+			Color("green.500"),
+			Color("blue.500"),
+			Color("purple.500")
 		],
 		colorMode: ColorMode = .random,
 		groupSize: Double = 0.8,
