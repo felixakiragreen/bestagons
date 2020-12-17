@@ -13,7 +13,6 @@ TODOs
 
 all features from ApparatusGenerator
 
-seed
 noise
 symmetry
 
@@ -81,7 +80,7 @@ class ApparatusGenerator {
 	var xDim: Int
 	var yDim: Int
 	var xRadius: Double
-	var yRadius: Double // or CGFloat?
+	var yRadius: Double
 	
 	var chanceNew: Double
 	var chanceExtend: Double
@@ -98,7 +97,6 @@ class ApparatusGenerator {
 	var roundness: Double
 	var solidness: Double
 	
-	// TODO: rename to Square?
 	var simple: Bool
 
 	// TODO: rename
@@ -151,12 +149,9 @@ class ApparatusGenerator {
 	func generate(
 		// initialTop: [] = nil
 		// initialLeft: [] = nil
-//		 verbose: Bool = false
 		idX: Int = 0,
 		idY: Int = 0
 	) -> [[Block]] {
-//	) -> [BlockRect] {
-		
 		self.idX = idX
 		self.idY = idY
 		
