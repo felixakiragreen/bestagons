@@ -57,22 +57,22 @@ struct ApparatusOptionsView: View {
 					Slideridoo(
 						value: $config.solidness,
 						range: 0...1,
-						label: "solid-y"
+						label: "solidness"
 					)
 					Slideridoo(
 						value: $config.chanceNew,
 						range: 0...1,
-						label: "compact-y"
+						label: "compact"
 					)
 					Slideridoo(
 						value: $config.chanceExtend,
 						range: 0...1,
-						label: "expand-y"
+						label: "clump"
 					)
 					Slideridoo(
 						value: $config.chanceVertical,
 						range: 0...1,
-						label: "vertical-y"
+						label: "verticality"
 					)
 				}
 			}//: GROUPBOX - shape
@@ -136,17 +136,26 @@ struct Slideridoo: View {
 		HStack {
 			if step != nil {
 				Slider(value: $value, in: range, step: step!) {
-					Text("\(label)\n\(value, specifier: "%g")")
-						.frame(width: 60, alignment: .leading)
+					HStack {
+						Text("\(label) →")
+							.font(.caption)
+							.foregroundColor(Color.secondary)
+						Text("\(value, specifier: "%g")")
+					}.frame(width: 80, alignment: .leading)
 				}
 			} else {
 				Slider(value: $value, in: range) {
-					Text("\(label)\n\(value, specifier: "%.2f")")
-						.frame(width: 80, alignment: .leading)
+					HStack {
+						Text("\(label) →")
+							.font(.caption)
+							.foregroundColor(Color.secondary)
+						Text("\(value, specifier: "%.2f")")
+					}.frame(width: 120, alignment: .leading)
 				}
 			}
-			
-//			Stepper(value: $value, in: 0...99, step: 1, label: {})
+			if step != nil {
+				Stepper(value: $value, in: 0...99, step: step!, label: {})
+			}
 		}
 		.padding(.horizontal)
 	}
