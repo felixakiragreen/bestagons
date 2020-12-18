@@ -8,7 +8,7 @@
 import Combine
 import SwiftUI
 
-struct ApparatusOptionsView: View {
+struct OptionsView: View {
 	@Binding var config: ApparatusConfig
 	@Binding var options: ApparatusOptions
 
@@ -140,6 +140,15 @@ struct ApparatusOptionsView: View {
 					}
 					//.padding(.horizontal)
 					Text("TODO: add stroke color")
+					/*
+					
+					colorMain
+					colorStroke
+					colorGround
+					
+					colorPalette
+					
+					*/
 				}.padding()
 			} //: GROUPBOX - coloring
 			
@@ -157,9 +166,9 @@ struct ApparatusOptionsView: View {
 
 // MARK: - PREVIEW
 
-struct ApparatusOptionsView_Previews: PreviewProvider {
+struct OptionsView_Previews: PreviewProvider {
 	static var previews: some View {
-		ApparatusOptionsView(
+		OptionsView(
 			config: .constant(ApparatusConfig()),
 			options: .constant(ApparatusOptions())
 		)

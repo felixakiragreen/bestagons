@@ -15,8 +15,12 @@
 		1D8D0726258860C80061CE7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D8D0710258860C80061CE7C /* Assets.xcassets */; };
 		1D8D0732258860D90061CE7C /* ApparatusBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D0731258860D90061CE7C /* ApparatusBuilder.swift */; };
 		1D8D0733258860D90061CE7C /* ApparatusBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D0731258860D90061CE7C /* ApparatusBuilder.swift */; };
-		1D8D0739258A847E0061CE7C /* ApparatusOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D0738258A847E0061CE7C /* ApparatusOptionsView.swift */; };
-		1D8D073A258A847E0061CE7C /* ApparatusOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D0738258A847E0061CE7C /* ApparatusOptionsView.swift */; };
+		1D8D0739258A847E0061CE7C /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D0738258A847E0061CE7C /* OptionsView.swift */; };
+		1D8D073A258A847E0061CE7C /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D0738258A847E0061CE7C /* OptionsView.swift */; };
+		1DD823E6258D20D0008D07BF /* ArtView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD823E5258D20D0008D07BF /* ArtView.swift */; };
+		1DD823E7258D20D0008D07BF /* ArtView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD823E5258D20D0008D07BF /* ArtView.swift */; };
+		1DD823ED258D20ED008D07BF /* PaletteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD823EC258D20ED008D07BF /* PaletteView.swift */; };
+		1DD823EE258D20ED008D07BF /* PaletteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD823EC258D20ED008D07BF /* PaletteView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,7 +33,9 @@
 		1D8D071F258860C80061CE7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1D8D0720258860C80061CE7C /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		1D8D0731258860D90061CE7C /* ApparatusBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApparatusBuilder.swift; sourceTree = "<group>"; };
-		1D8D0738258A847E0061CE7C /* ApparatusOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApparatusOptionsView.swift; sourceTree = "<group>"; };
+		1D8D0738258A847E0061CE7C /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
+		1DD823E5258D20D0008D07BF /* ArtView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtView.swift; sourceTree = "<group>"; };
+		1DD823EC258D20ED008D07BF /* PaletteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,9 +71,11 @@
 			children = (
 				1D8D070E258860C60061CE7C /* ApparatusApp.swift */,
 				1D8D070F258860C60061CE7C /* ContentView.swift */,
-				1D8D0710258860C80061CE7C /* Assets.xcassets */,
 				1D8D0731258860D90061CE7C /* ApparatusBuilder.swift */,
-				1D8D0738258A847E0061CE7C /* ApparatusOptionsView.swift */,
+				1D8D0738258A847E0061CE7C /* OptionsView.swift */,
+				1DD823E5258D20D0008D07BF /* ArtView.swift */,
+				1DD823EC258D20ED008D07BF /* PaletteView.swift */,
+				1D8D0710258860C80061CE7C /* Assets.xcassets */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -195,9 +203,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1DD823E6258D20D0008D07BF /* ArtView.swift in Sources */,
 				1D8D0723258860C80061CE7C /* ContentView.swift in Sources */,
 				1D8D0732258860D90061CE7C /* ApparatusBuilder.swift in Sources */,
-				1D8D0739258A847E0061CE7C /* ApparatusOptionsView.swift in Sources */,
+				1D8D0739258A847E0061CE7C /* OptionsView.swift in Sources */,
+				1DD823ED258D20ED008D07BF /* PaletteView.swift in Sources */,
 				1D8D0721258860C80061CE7C /* ApparatusApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -206,9 +216,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1DD823E7258D20D0008D07BF /* ArtView.swift in Sources */,
 				1D8D0724258860C80061CE7C /* ContentView.swift in Sources */,
 				1D8D0733258860D90061CE7C /* ApparatusBuilder.swift in Sources */,
-				1D8D073A258A847E0061CE7C /* ApparatusOptionsView.swift in Sources */,
+				1D8D073A258A847E0061CE7C /* OptionsView.swift in Sources */,
+				1DD823EE258D20ED008D07BF /* PaletteView.swift in Sources */,
 				1D8D0722258860C80061CE7C /* ApparatusApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

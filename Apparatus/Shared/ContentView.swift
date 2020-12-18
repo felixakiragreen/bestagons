@@ -27,7 +27,7 @@ struct ContentView: View {
 						Text("Options")
 							.font(.headline)
 					
-						ApparatusOptionsView(
+						OptionsView(
 							config: $config,
 							options: $options,
 							onChange: { _ in
