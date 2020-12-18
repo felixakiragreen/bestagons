@@ -232,21 +232,21 @@ class ApparatusGenerator {
 	) -> Block {
 		
 		if !left.inside && !top.inside {
-			return blockSet1(x: x, y: y)
+			return blockSet1(x: x, y: y, left: left, top: top)
 		}
 		
 		if left.inside && !top.inside {
 			if left.h {
-				return blockSet3(x: x, y: y, left: left)
+				return blockSet3(x: x, y: y, left: left, top: top)
 			}
-			return blockSet2(x: x, y: y)
+			return blockSet2(x: x, y: y, left: left, top: top)
 		}
 		
 		if !left.inside && top.inside {
 			if top.v {
-				return blockSet5(x: x, y: y, top: top)
+				return blockSet5(x: x, y: y, left: left, top: top)
 			}
-			return blockSet4(x: x, y: y)
+			return blockSet4(x: x, y: y, left: left, top: top)
 		}
 		
 		if left.inside && top.inside {
@@ -254,12 +254,12 @@ class ApparatusGenerator {
 				return blockSet6(left: left)
 			}
 			if left.h && !top.v {
-				return blockSet7(x: x, y: y, left: left)
+				return blockSet7(x: x, y: y, left: left, top: top)
 			}
 			if !left.h && top.v {
-				return blockSet8(x: x, y: y, top: top)
+				return blockSet8(x: x, y: y, left: left, top: top)
 			}
-			return blockSet9(x: x, y: y, top: top, left: left)
+			return blockSet9(x: x, y: y, left: left, top: top)
 		}
 		
 //		// TODO: remove
@@ -269,66 +269,66 @@ class ApparatusGenerator {
 	
 	// MARK: - BLOCK SETS
 
-	func blockSet1(x: Int, y: Int) -> Block {
+	func blockSet1(x: Int, y: Int, left: Block, top: Block) -> Block {
 		if startNewFromBlank(x: x, y: y) {
-			return newBlock(nX: x, nY: y)
+			return newBlock(nX: x, nY: y, left: left, top: top)
 		}
 		return Block()
 	}
 	
-	func blockSet2(x: Int, y: Int) -> Block {
+	func blockSet2(x: Int, y: Int, left: Block, top: Block) -> Block {
 		if startNewFromBlank(x: x, y: y) {
-			return newBlock(nX: x, nY: y)
+			return newBlock(nX: x, nY: y, left: left, top: top)
 		}
 		return Block(v: true)
 	}
 	
-	func blockSet3(x: Int, y: Int, left: Block) -> Block {
+	func blockSet3(x: Int, y: Int, left: Block, top: Block) -> Block {
 		if extend(x: x, y: y) {
 			return Block(h: true, inside: true, color: left.color, id: left.id)
 		}
-		return blockSet2(x: x, y: x)
+		return blockSet2(x: x, y: x, left: left, top: top)
 	}
 	
-	func blockSet4(x: Int, y: Int) -> Block {
+	func blockSet4(x: Int, y: Int, left: Block, top: Block) -> Block {
 		if startNewFromBlank(x: x, y: y) {
-			return newBlock(nX: x, nY: y)
+			return newBlock(nX: x, nY: y, left: left, top: top)
 		}
 		return Block(h: true)
 	}
 	
-	func blockSet5(x: Int, y: Int, top: Block) -> Block {
+	func blockSet5(x: Int, y: Int, left: Block, top: Block) -> Block {
 		if extend(x: x, y: y) {
 			return Block(v: true, inside: true, color: top.color, id: top.id)
 		}
-		return blockSet4(x: x, y: x)
+		return blockSet4(x: x, y: x, left: left, top: top)
 	}
 	
 	func blockSet6(left: Block) -> Block {
 		return Block(inside: true, color: left.color, id: left.id)
 	}
 	
-	func blockSet7(x: Int, y: Int, left: Block) -> Block {
+	func blockSet7(x: Int, y: Int, left: Block, top: Block) -> Block {
 		if extend(x: x, y: y) {
 			return Block(h: true, inside: true, color: left.color, id: left.id)
 		}
 		if startNew(x: x, y: y) {
-			return newBlock(nX: x, nY: y)
+			return newBlock(nX: x, nY: y, left: left, top: top)
 		}
 		return Block(h: true, v: true)
 	}
 	
-	func blockSet8(x: Int, y: Int, top: Block) -> Block {
+	func blockSet8(x: Int, y: Int, left: Block, top: Block) -> Block {
 		if extend(x: x, y: y) {
 			return Block(v: true, inside: true, color: top.color, id: top.id)
 		}
 		if startNew(x: x, y: y) {
-			return newBlock(nX: x, nY: y)
+			return newBlock(nX: x, nY: y, left: left, top: top)
 		}
 		return Block(h: true, v: true)
 	}
 	
-	func blockSet9(x: Int, y: Int, top: Block, left: Block) -> Block {
+	func blockSet9(x: Int, y: Int, left: Block, top: Block) -> Block {
 		if verticalDir(x: x, y: y) {
 			return Block(v: true, inside: true, color: top.color, id: top.id)
 		}
@@ -338,21 +338,34 @@ class ApparatusGenerator {
 	// MARK: - NEW BLOCK
 	func newBlock(
 		nX: Int, // newX? noiseX?
-		nY: Int // TODO
+		nY: Int, // TODO
+		left: Block,
+		top: Block
 	) -> Block {
 		//	TODO: determine color based on noise
+		
+		let x = Double(nX)
+		let y = Double(nY)
+		
+		let randomColor: Color = getRandomElement(array: colors, nX: x, nY: y)
 		
 		var color: Color {
 			switch colorMode {
 			case .random:
-				return colors.randomElement() ?? Color.red
-//				return // noise func
-//			TODO: color group
-			case .group:
-				return colorMain
+				return randomColor
+//				return colors.randomElement() ?? Color.red
 			case .main:
-				// TODO:
+				return noise(nX: x, nY: y, nZ: "_main") > 0.75 ? randomColor : colorMain
+			case .group:
+				let keep = noise(nX: x, nY: y, nZ: "_keep") > 0.5 ? left.color : top.color
+				//
+				if noise(nX: x, nY: y, nZ: "_group") > groupSize {
+					colorMain = randomColor
+				} else if keep != nil {
+					colorMain = keep!
+				}
 				return colorMain
+//				 =  ? randomColor : (keep || colorMain)
 			default:
 				return Color.red
 			}
@@ -440,10 +453,9 @@ class ApparatusGenerator {
 //		return Double.random(in: 0.0...1.0)
 	}
 	
-//	func getRandomElement(<#parameters#>) -> <#return type#> {
-//		<#function body#>
-//	}
-//	[].RandomElement
+	func getRandomElement<T>(array: Array<T>, nX: Double, nY: Double) -> T {
+		return array[Int(floor(noise(nX: nX, nY: nY, nZ: "_array") * Double(array.count)))]
+	}
 }
 
 

@@ -117,7 +117,13 @@ struct ApparatusOptionsView: View {
 			GroupBox(label: Text("coloring")) {
 				VStack {
 					HStack {
-						Text("TODO: add colorMode")
+						Picker(selection: $config.colorMode, label: Text("mode")) {
+							Text("main").tag(ColorMode.main)
+							Text("single").tag(ColorMode.single)
+							Text("group").tag(ColorMode.group)
+							Text("random").tag(ColorMode.random)
+						}.pickerStyle(SegmentedPickerStyle())
+						
 						Text("TODO: add stroke color")
 					}.padding(.horizontal)
 				}
