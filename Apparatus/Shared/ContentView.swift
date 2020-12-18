@@ -15,7 +15,8 @@ struct ContentView: View {
 	@State var config = ApparatusConfig()
 	
 	var body: some View {
-		let cell = CGFloat(config.cellSize)
+		let size = CGFloat(options.sizing)
+		let pad = CGFloat(options.padding)
 		
 		ZStack(alignment: .topLeading) {
 			Color("grey.800")
@@ -48,10 +49,10 @@ struct ContentView: View {
 					VStack {
 						ZStack(alignment: .topLeading) {
 							ForEach(rects, id: \.id) { rect in
-								let w = CGFloat(rect.w) * cell
-								let h = CGFloat(rect.h) * cell
-								let x = CGFloat(rect.x1) * cell + CGFloat(options.padding)
-								let y = CGFloat(rect.y1) * cell + CGFloat(options.padding)
+								let w = CGFloat(rect.w) * (size + pad) - pad
+								let h = CGFloat(rect.h) * (size + pad) - pad
+								let x = CGFloat(rect.x1) * (size + pad)
+								let y = CGFloat(rect.y1) * (size + pad)
 								
 								RoundedRectangle(cornerRadius: CGFloat(options.rounding), style: .continuous)
 									.foregroundColor(rect.color.opacity(options.showFill ? 1 : 0))
@@ -65,12 +66,12 @@ struct ContentView: View {
 							}
 						}
 						.frame(
-							width: CGFloat(apparatus.xDim) * cell,
-							height: CGFloat(apparatus.yDim) * cell,
+							width: CGFloat(apparatus.xDim) * size,
+							height: CGFloat(apparatus.yDim) * size,
 							alignment: .topLeading
 						)
-						.padding([.bottom, .trailing], cell)
-						.padding(.bottom, cell)
+						.padding([.bottom, .trailing], size)
+						.padding(.bottom, size)
 						.animation(.default)
 					} //: VSTACK - Apparatus
 				} //: VSTACK - Top
