@@ -17,7 +17,7 @@ struct ContentView: View {
 	var body: some View {
 		let cell = CGFloat(config.cellSize)
 		
-		ZStack {
+		ZStack(alignment: .topLeading) {
 			Color("grey.800")
 		
 			VStack {
@@ -41,6 +41,7 @@ struct ContentView: View {
 							Text("Regenerate")
 						}
 						.padding()
+						Text("TODO: consider adding shape/color")
 					} //: VSTACK - Options
 					.frame(width: 320)
 				
@@ -49,13 +50,13 @@ struct ContentView: View {
 							ForEach(rects, id: \.id) { rect in
 								let w = CGFloat(rect.w) * cell
 								let h = CGFloat(rect.h) * cell
-								let x = CGFloat(rect.x1) * cell
-								let y = CGFloat(rect.y1) * cell
+								let x = CGFloat(rect.x1) * cell + CGFloat(options.padding)
+								let y = CGFloat(rect.y1) * cell + CGFloat(options.padding)
 								
-								Rectangle()
-									.foregroundColor(rect.color.opacity(options.showFill ? 0.5 : 0))
+								RoundedRectangle(cornerRadius: CGFloat(options.rounding), style: .continuous)
+									.foregroundColor(rect.color.opacity(options.showFill ? 1 : 0))
 									.frame(width: w, height: h)
-									.border(Color.black.opacity(0.5), width: options.showStroke ? 1 : 0)
+									.border(Color("grey.900").opacity(0.5), width: options.showStroke ? 1 : 0)
 									.overlay(options.showDebug ? Text("\(rect.id)")
 										.font(.caption)
 										: nil
@@ -102,5 +103,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
 		ContentView()
+//			.frame(width: 900.0, height: 900.0)
 	}
 }

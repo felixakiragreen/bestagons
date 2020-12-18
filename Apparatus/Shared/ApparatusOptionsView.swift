@@ -95,11 +95,21 @@ struct ApparatusOptionsView: View {
 						Toggle(isOn: $options.showDebug) {
 							Text("id")
 						}
-					}.padding(.horizontal)
+					}.padding()
+					Slideridoo(
+						value: $options.rounding,
+						range: 1...16,
+						step: 1,
+						label: "rounding"
+					)
+					Slideridoo(
+						value: $options.padding,
+						range: 1...16,
+						step: 1,
+						label: "padding"
+					)
 					HStack {
-						Text("TODO: add rounding slider")
-						Text("TODO: add padding between shapes")
-					}.padding(.horizontal)
+					}
 				}
 			} //: GROUPBOX - look
 
@@ -110,8 +120,11 @@ struct ApparatusOptionsView: View {
 						Toggle(isOn: $options.preserveSeed) {
 							Text("preserveSeed")
 						}
-					}.padding(.horizontal)
-				}
+					}
+					HStack {
+						//
+					}
+				}.padding()
 			} //: GROUPBOX - randomness
 			
 			GroupBox(label: Text("coloring")) {
@@ -124,9 +137,10 @@ struct ApparatusOptionsView: View {
 							Text("random").tag(ColorMode.random)
 						}.pickerStyle(SegmentedPickerStyle())
 						
-						Text("TODO: add stroke color")
-					}.padding(.horizontal)
-				}
+					}
+					//.padding(.horizontal)
+					Text("TODO: add stroke color")
+				}.padding()
 			} //: GROUPBOX - coloring
 			
 			Spacer()
@@ -304,16 +318,23 @@ struct ApparatusOptions: Equatable {
 	var showFill: Bool
 	var showDebug: Bool
 	var preserveSeed: Bool
+	
+	var rounding: Double
+	var padding: Double
 
 	init(
-		stroke: Bool = true,
+		stroke: Bool = false,
 		fill: Bool = true,
 		debug: Bool = false,
-		preserveSeed: Bool = true
+		preserveSeed: Bool = true,
+		rounding: Double = 0.0,
+		padding: Double = 0.0
 	) {
 		self.showStroke = stroke
 		self.showFill = fill
 		self.showDebug = debug
 		self.preserveSeed = preserveSeed
+		self.rounding = rounding
+		self.padding = padding
 	}
 }
