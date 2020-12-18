@@ -19,12 +19,6 @@ struct ApparatusOptionsView: View {
 			GroupBox(label: Text("shape")) {
 				VStack {
 					Slideridoo(
-						value: $config.cellSize,
-						range: 1...16,
-						step: 1,
-						label: "size"
-					)
-					Slideridoo(
 						value: $config.cellCountX,
 						range: 1...16,
 						step: 1,
@@ -97,16 +91,22 @@ struct ApparatusOptionsView: View {
 						}
 					}.padding()
 					Slideridoo(
-						value: $options.rounding,
+						value: $options.sizing,
 						range: 1...16,
 						step: 1,
-						label: "rounding"
+						label: "sizing"
 					)
 					Slideridoo(
 						value: $options.padding,
 						range: 1...16,
 						step: 1,
 						label: "padding"
+					)
+					Slideridoo(
+						value: $options.rounding,
+						range: 1...16,
+						step: 1,
+						label: "rounding"
 					)
 					HStack {
 					}
@@ -233,32 +233,37 @@ struct IntField: View {
 // MARK: - CONFIG
 
 struct ApparatusConfig: Equatable {
-	var cellSize: Double
-
 	var cellCountX: Double
 	var cellCountY: Double
 
+	var hSymmetric: Bool
+	var vSymmetric: Bool
+	
+	// colors
+
+	var colors: [Color]
+	var colorMode: ColorMode
+	var groupSize: Double
+	
+	// non-square
+	
+	var simple: Bool
+	
 	var chanceNew: Double
 	var chanceExtend: Double
 	var chanceVertical: Double
 
-	var colors: [Color]
-
-	var colorMode: ColorMode
-	var groupSize: Double
 	var roundness: Double
 	var solidness: Double
 
-	var hSymmetric: Bool
-	var vSymmetric: Bool
-
-	var simple: Bool
+	
+	// randomness
+	
 	//	var simplex: ...
 	//	var rateOfChange: Double
 	var seed: Int
 
 	init(
-		cellSize: Double = 8,
 		width: Double = 8,
 		height: Double = 8,
 		initiateChance: Double = 0.8,
@@ -295,17 +300,21 @@ struct ApparatusConfig: Equatable {
 //		rateOfChange: Double = 0.01
 		seed: Int = 0
 	) {
-		self.cellSize = cellSize
 		self.cellCountX = width
 		self.cellCountY = height
+		
+		self.hSymmetric = horizontalSymmetry
+		self.vSymmetric = verticalSymmetry
+		
 		self.chanceNew = initiateChance
 		self.chanceExtend = extensionChance
 		self.chanceVertical = verticalChance
+		
 		self.colors = colors
 		self.colorMode = colorMode
 		self.groupSize = groupSize
-		self.hSymmetric = horizontalSymmetry
-		self.vSymmetric = verticalSymmetry
+		
+		
 		self.roundness = roundness
 		self.solidness = solidness
 		self.simple = simple
@@ -319,22 +328,27 @@ struct ApparatusOptions: Equatable {
 	var showDebug: Bool
 	var preserveSeed: Bool
 	
-	var rounding: Double
+	var sizing: Double
 	var padding: Double
+	var rounding: Double
 
 	init(
 		stroke: Bool = false,
 		fill: Bool = true,
 		debug: Bool = false,
 		preserveSeed: Bool = true,
-		rounding: Double = 0.0,
-		padding: Double = 0.0
+
+		sizing: Double = 8,
+		padding: Double = 0,
+		rounding: Double = 0
 	) {
 		self.showStroke = stroke
 		self.showFill = fill
 		self.showDebug = debug
 		self.preserveSeed = preserveSeed
-		self.rounding = rounding
+
+		self.sizing = sizing
 		self.padding = padding
+		self.rounding = rounding
 	}
 }
