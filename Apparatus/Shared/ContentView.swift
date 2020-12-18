@@ -47,6 +47,8 @@ struct ContentView: View {
 					.frame(width: 320)
 				
 					VStack {
+						Spacer()
+						
 						ZStack(alignment: .topLeading) {
 							ForEach(rects, id: \.id) { rect in
 								let w = CGFloat(rect.w) * (size + pad) - pad
@@ -64,7 +66,7 @@ struct ContentView: View {
 									)
 									.offset(x: x, y: y)
 							}
-						}
+						}//: ZSTACK - Apparatus
 						.frame(
 							width: CGFloat(apparatus.xDim) * size,
 							height: CGFloat(apparatus.yDim) * size,
@@ -73,7 +75,9 @@ struct ContentView: View {
 						.padding([.bottom, .trailing], size)
 						.padding(.bottom, size)
 						.animation(.default)
-					} //: VSTACK - Apparatus
+						
+						Spacer()
+					} //: VSTACK - Apparatus Side
 				} //: VSTACK - Top
 				.onAppear {
 					self.update()

@@ -98,13 +98,13 @@ struct ApparatusOptionsView: View {
 					)
 					Slideridoo(
 						value: $options.padding,
-						range: 1...16,
+						range: 0...16,
 						step: 1,
 						label: "padding"
 					)
 					Slideridoo(
 						value: $options.rounding,
-						range: 1...16,
+						range: 0...16,
 						step: 1,
 						label: "rounding"
 					)
