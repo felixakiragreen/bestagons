@@ -189,20 +189,21 @@ class ApparatusGenerator {
 				}
 				// TODO: handle initialTop & initialLeft
 
-				else if hSymmetric && j > grid[i].count / 2 {
-					grid[i][j] = Block(
-						block: grid[i][grid[i].count - j],
-						v: grid[i][grid[i].count - j + 1].v,
-						id: getIdAndIncrement()
-					)
-				}
-				else if vSymmetric && i > grid.count / 2 {
+				else if hSymmetric && i > grid.count / 2 {
 					grid[i][j] = Block(
 						block: grid[grid.count - i][j],
 						h: grid[grid.count - i + 1][j].h,
 						id: getIdAndIncrement()
 					)
 				}
+				else if vSymmetric && j > grid[i].count / 2 {
+					grid[i][j] = Block(
+						block: grid[i][grid[i].count - j],
+						v: grid[i][grid[i].count - j + 1].v,
+						id: getIdAndIncrement()
+					)
+				}
+				
 				
 				else {
 					grid[i][j] = nextBlock(
