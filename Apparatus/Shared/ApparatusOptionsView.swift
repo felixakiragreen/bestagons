@@ -96,6 +96,10 @@ struct ApparatusOptionsView: View {
 							Text("id")
 						}
 					}.padding(.horizontal)
+					HStack {
+						Text("TODO: add rounding slider")
+						Text("TODO: add padding between shapes")
+					}.padding(.horizontal)
 				}
 			} //: GROUPBOX - look
 
@@ -109,8 +113,19 @@ struct ApparatusOptionsView: View {
 					}.padding(.horizontal)
 				}
 			} //: GROUPBOX - randomness
+			
+			GroupBox(label: Text("coloring")) {
+				VStack {
+					HStack {
+						Text("TODO: add colorMode")
+						Text("TODO: add stroke color")
+					}.padding(.horizontal)
+				}
+			} //: GROUPBOX - coloring
+			
+			Spacer()
 		} //: VSTACK
-		.frame(maxWidth: .infinity, maxHeight: .infinity)
+//		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.onChange(of: config, perform: { opt in
 //			print(opt)
 			if let update = self.onChange {
@@ -239,7 +254,19 @@ struct ApparatusConfig: Equatable {
 			Color("yellow.500"),
 			Color("green.500"),
 			Color("blue.500"),
-			Color("purple.500")
+			Color("purple.500"),
+			Color("red.400"),
+			Color("orange.400"),
+			Color("yellow.400"),
+			Color("green.400"),
+			Color("blue.400"),
+			Color("purple.400"),
+			Color("red.400"),
+			Color("orange.600"),
+			Color("yellow.600"),
+			Color("green.600"),
+			Color("blue.600"),
+			Color("purple.600"),
 		],
 		colorMode: ColorMode = .random,
 		groupSize: Double = 0.8,
