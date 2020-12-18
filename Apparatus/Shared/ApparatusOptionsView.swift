@@ -241,8 +241,10 @@ struct ApparatusConfig: Equatable {
 	
 	// colors
 
-	var colors: [Color]
+	var colorPalette: [Color]
+	var colorMain: Color?
 	var colorMode: ColorMode
+	
 	var groupSize: Double
 	
 	// non-square
@@ -262,6 +264,11 @@ struct ApparatusConfig: Equatable {
 	//	var simplex: ...
 	//	var rateOfChange: Double
 	var seed: Int
+	
+	
+	
+	// var seedShape =
+	// var seedColor =
 
 	init(
 		width: Double = 8,
@@ -273,26 +280,30 @@ struct ApparatusConfig: Equatable {
 		verticalSymmetry: Bool = false,
 		roundness: Double = 0.1,
 		solidness: Double = 0.5,
-		colors: [Color] = [
-			Color("red.500"),
-			Color("orange.500"),
-			Color("yellow.500"),
-			Color("green.500"),
-			Color("blue.500"),
-			Color("purple.500"),
-			Color("red.400"),
-			Color("orange.400"),
-			Color("yellow.400"),
-			Color("green.400"),
-			Color("blue.400"),
-			Color("purple.400"),
-			Color("red.400"),
-			Color("orange.600"),
-			Color("yellow.600"),
-			Color("green.600"),
-			Color("blue.600"),
-			Color("purple.600"),
-		],
+		colorPalette: [Color] = bw,
+		colorMain: Color? = nil,
+//		colors: [Color] = colorPalette(primaries: [], luminance: <#T##[ColorLuminance]#>)
+//		colors: [Color] = [
+//			Color("red.500"),
+//			Color("orange.500"),
+//			Color("yellow.500"),
+//			Color("green.500"),
+//			Color("blue.500"),
+//			Color("purple.500"),
+//			Color("red.400"),
+//			Color("orange.400"),
+//			Color("yellow.400"),
+//			Color("green.400"),
+//			Color("blue.400"),
+//			Color("purple.400"),
+//			Color("red.400"),
+//			Color("orange.600"),
+//			Color("yellow.600"),
+//			Color("green.600"),
+//			Color("blue.600"),
+//			Color("purple.600"),
+//		],
+		
 		colorMode: ColorMode = .random,
 		groupSize: Double = 0.8,
 		simple: Bool = true,
@@ -310,10 +321,10 @@ struct ApparatusConfig: Equatable {
 		self.chanceExtend = extensionChance
 		self.chanceVertical = verticalChance
 		
-		self.colors = colors
+		self.colorPalette = colorPalette
 		self.colorMode = colorMode
+		self.colorMain = colorMain
 		self.groupSize = groupSize
-		
 		
 		self.roundness = roundness
 		self.solidness = solidness
@@ -332,6 +343,9 @@ struct ApparatusOptions: Equatable {
 	var padding: Double
 	var rounding: Double
 
+	var colorStroke: Color
+	var colorGround: Color
+
 	init(
 		stroke: Bool = false,
 		fill: Bool = true,
@@ -340,7 +354,10 @@ struct ApparatusOptions: Equatable {
 
 		sizing: Double = 8,
 		padding: Double = 0,
-		rounding: Double = 0
+		rounding: Double = 0,
+		
+		colorStroke: Color = Color("grey.900"),
+		colorGround: Color = Color("grey.500")
 	) {
 		self.showStroke = stroke
 		self.showFill = fill
@@ -350,5 +367,60 @@ struct ApparatusOptions: Equatable {
 		self.sizing = sizing
 		self.padding = padding
 		self.rounding = rounding
+		
+		self.colorStroke = colorStroke
+		self.colorGround = colorGround
 	}
+}
+
+let bw: [Color] = [
+	Color("grey.100"),
+	Color("grey.200"),
+	Color("grey.300"),
+	Color("grey.400"),
+	Color("grey.500"),
+	Color("grey.600"),
+	Color("grey.700"),
+	Color("grey.800"),
+	Color("grey.900"),
+]
+  
+enum ColorPrimary {
+	case grey, red, orange, yellow, green, blue, purple
+}
+
+enum ColorLuminance: Int {
+	case nearWhite = 100
+	case extraLight = 200
+	case light = 300
+	case normal = 400
+	case medium = 500
+	case semiDark = 600
+	case dark = 700
+	case extraDark = 800
+	case nearBlack = 900
+}
+
+//100 Thin (Hairline)
+//200 Extra Light (Ultra Light)
+//300 Light
+//400 Normal
+//500 Medium
+//600 Semi Bold (Demi Bold)
+//700 Bold
+//800 Extra Bold (Ultra Bold)
+//900 Black (Heavy)
+
+func getColorPalette(
+	primaries: [ColorPrimary],
+	luminance: [ColorLuminance]
+) -> [Color] {
+	var colors = [Color]()
+	for p in primaries {
+		for l in luminance {
+			colors.append(Color("\(p).\(l)"))
+		}
+	}
+
+	return colors
 }

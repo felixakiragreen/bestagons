@@ -68,12 +68,13 @@ struct ContentView: View {
 							}
 						}//: ZSTACK - Apparatus
 						.frame(
-							width: CGFloat(apparatus.xDim) * size,
-							height: CGFloat(apparatus.yDim) * size,
+							width: CGFloat(apparatus.xDim) * (size + pad),
+							height: CGFloat(apparatus.yDim) * (size + pad),
 							alignment: .topLeading
 						)
 						.padding([.bottom, .trailing], size)
 						.padding(.bottom, size)
+						.background(options.colorGround)
 						.animation(.default)
 						
 						Spacer()
