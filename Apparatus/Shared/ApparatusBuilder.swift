@@ -34,7 +34,7 @@ class ApparatusGenerator {
 	var chanceExtend: Double
 	var chanceVertical: Double
 	
-	var colors: [Color]
+	var colors: [ColorPreset]
 	
 	var colorMode: ColorMode
 	var groupSize: Double
@@ -56,7 +56,7 @@ class ApparatusGenerator {
 //	--
 	var idX: Int
 	var idY: Int
-	var colorMain: Color
+	var colorMain: ColorPreset
 	var idCounter: Int
 //	--
 	
@@ -84,7 +84,7 @@ class ApparatusGenerator {
 		self.idX = 0
 		self.idY = 0
 		self.idCounter = 0
-		self.colorMain = config.colorPalette.randomElement() ?? Color.red
+		self.colorMain = config.colorPalette.randomElement() ?? ColorPreset()
 	}
 	
 	func getIdAndIncrement() -> Int {
@@ -105,7 +105,7 @@ class ApparatusGenerator {
 		
 		self.idCounter = 0
 		// TODO: get_random colors
-		self.colorMain = Color.blue
+//		self.colorMain = ColorPreset.blue
 		
 //		var grid = [[Block]]()
 		
@@ -283,13 +283,13 @@ class ApparatusGenerator {
 		let x = Double(nX)
 		let y = Double(nY)
 		
-		let randomColor: Color = getRandomElement(array: colors, nX: x, nY: y)
+		let randomColor: ColorPreset = getRandomElement(array: colors, nX: x, nY: y)
 		
-		var color: Color {
+		var color: ColorPreset {
 			switch colorMode {
 			case .random:
 				return randomColor
-//				return colors.randomElement() ?? Color.red
+//				return colors.randomElement() ?? ColorPreset.red
 			case .main:
 				return noise(nX: x, nY: y, nZ: "_main") > 0.75 ? randomColor : colorMain
 			case .group:
@@ -303,7 +303,7 @@ class ApparatusGenerator {
 				return colorMain
 //				 =  ? randomColor : (keep || colorMain)
 			default:
-				return Color.red
+				return ColorPreset()
 			}
 		}
 		
@@ -405,14 +405,14 @@ struct Block {
 	var h: Bool
 	var v: Bool
 	var inside: Bool
-	var color: Color?
+	var color: ColorPreset?
 	var id: Int?
 	
 	init(
 		h: Bool = false,
 		v: Bool = false,
 		inside: Bool = false,
-		color: Color? = nil,
+		color: ColorPreset? = nil,
 		id: Int? = nil
 	) {
 		self.h = h
@@ -444,7 +444,7 @@ struct Block {
 struct BlockCorner {
 	var x1: Int
 	var y1: Int
-	var color: Color
+	var color: ColorPreset
 	var id: Int
 }
 
@@ -453,7 +453,7 @@ struct BlockRect {
 	var y1: Int
 	var w: Int
 	var h: Int
-	var color: Color
+	var color: ColorPreset
 	var id: Int
 }
 
@@ -471,7 +471,7 @@ func getNWCorners(grid: [[Block]]) -> [BlockCorner] {
 //	for column in grid {
 //		for cell in column {
 //			if cell.h && cell.v && cell.ind {
-//				nwCorners.append(BlockRect(x1: cell, y1: <#T##Int#>, color: <#T##Color#>, id: <#T##Int#>))
+//				nwCorners.append(BlockRect(x1: cell, y1: <#T##Int#>, color: <#T##ColorPreset#>, id: <#T##Int#>))
 //			}
 //		}
 //	}
@@ -479,7 +479,7 @@ func getNWCorners(grid: [[Block]]) -> [BlockCorner] {
 		for j in grid[i].indices {
 			let cell = grid[i][j]
 			if cell.h && cell.v && cell.inside {
-				nwCorners.append(BlockCorner(x1: j, y1: i, color: cell.color ?? Color.orange, id: cell.id ?? 9999))
+				nwCorners.append(BlockCorner(x1: j, y1: i, color: cell.color ?? ColorPreset(), id: cell.id ?? 9999))
 			}
 		}
 	}

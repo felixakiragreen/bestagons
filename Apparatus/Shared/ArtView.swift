@@ -24,7 +24,7 @@ struct ArtView: View {
 				let y = CGFloat(rect.y1) * (size + pad)
 				
 				RoundedRectangle(cornerRadius: CGFloat(options.rounding), style: .continuous)
-					.foregroundColor(rect.color.opacity(options.showFill ? 1 : 0))
+					.foregroundColor(rect.color.getColor().opacity(options.showFill ? 1 : 0))
 					.frame(width: w, height: h)
 //					TODO: Fix the stroke not working with rounding
 					.border(options.colorStroke.getColor(), width: options.showStroke ? CGFloat(options.stroking) : 0)

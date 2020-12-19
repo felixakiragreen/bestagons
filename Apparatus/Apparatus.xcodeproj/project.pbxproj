@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1D5CA33C258E5EB9001F0366 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D5CA33B258E5EB9001F0366 /* ColorModel.swift */; };
+		1D5CA33D258E5EB9001F0366 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D5CA33B258E5EB9001F0366 /* ColorModel.swift */; };
 		1D8D0721258860C80061CE7C /* ApparatusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D070E258860C60061CE7C /* ApparatusApp.swift */; };
 		1D8D0722258860C80061CE7C /* ApparatusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D070E258860C60061CE7C /* ApparatusApp.swift */; };
 		1D8D0723258860C80061CE7C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8D070F258860C60061CE7C /* ContentView.swift */; };
@@ -24,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1D5CA33B258E5EB9001F0366 /* ColorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorModel.swift; sourceTree = "<group>"; };
 		1D8D070E258860C60061CE7C /* ApparatusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApparatusApp.swift; sourceTree = "<group>"; };
 		1D8D070F258860C60061CE7C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1D8D0710258860C80061CE7C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -75,6 +78,7 @@
 				1D8D0738258A847E0061CE7C /* OptionsView.swift */,
 				1DD823E5258D20D0008D07BF /* ArtView.swift */,
 				1DD823EC258D20ED008D07BF /* PaletteView.swift */,
+				1D5CA33B258E5EB9001F0366 /* ColorModel.swift */,
 				1D8D0710258860C80061CE7C /* Assets.xcassets */,
 			);
 			path = Shared;
@@ -204,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1DD823E6258D20D0008D07BF /* ArtView.swift in Sources */,
+				1D5CA33C258E5EB9001F0366 /* ColorModel.swift in Sources */,
 				1D8D0723258860C80061CE7C /* ContentView.swift in Sources */,
 				1D8D0732258860D90061CE7C /* ApparatusBuilder.swift in Sources */,
 				1D8D0739258A847E0061CE7C /* OptionsView.swift in Sources */,
@@ -217,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1DD823E7258D20D0008D07BF /* ArtView.swift in Sources */,
+				1D5CA33D258E5EB9001F0366 /* ColorModel.swift in Sources */,
 				1D8D0724258860C80061CE7C /* ContentView.swift in Sources */,
 				1D8D0733258860D90061CE7C /* ApparatusBuilder.swift in Sources */,
 				1D8D073A258A847E0061CE7C /* OptionsView.swift in Sources */,
