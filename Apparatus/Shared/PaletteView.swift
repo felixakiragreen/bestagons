@@ -9,11 +9,12 @@ import SwiftUI
 
 struct PaletteView: View {
 	@State var singlePrimary: ColorPrimary = .grey
-	@State var severalPrimary: [ColorPrimary] = [.red, .orange, .yellow, .green, .blue, .purple]
+	@State var severalPrimary: [ColorPrimary] = ColorPrimary.data
 	@State var singleLuminance: ColorLuminance = .nearWhite
-	@State var severalLuminance: [ColorLuminance] = [.normal, .medium, .semiDark]
+	@State var severalLuminance: [ColorLuminance] = ColorLuminance.data
 	
 	@State var singleColor = ColorPreset(primary: .green, luminance: .normal)
+	@State var multipleColor: [ColorPreset] = getColorPalette(primaries: ColorPrimary.data, luminance: ColorLuminance.data)
 	
 	var body: some View {
 		VStack {
@@ -34,6 +35,7 @@ struct PaletteView: View {
 					.padding()
 			}
 			ColorPresetSelectSingle(selection: $singleColor)
+			ColorPresetSelectSeveral(selection: $multipleColor)
 		}
 	}
 }
@@ -70,7 +72,65 @@ struct ColorPresetSelectSingle: View {
 	}
 }
 
-struct LabelShowingColor<Content: View>: View {
+struct ColorPresetSelectSeveral: View {
+	@Binding var selection: [ColorPreset]
+	
+	var severalPrimary: Binding<[ColorPrimary]> {
+		Binding<[ColorPrimary]>(
+			get: {
+				ColorPrimary.allCases.filter { eachPrimary in
+					self.selection.contains { eachColor in
+						return eachColor.primary == eachPrimary
+					}
+				}
+			},
+			set: { primaries in
+				primaries.forEach { eachPrimary in
+					ColorLuminance.allCases.forEach { eachLuminance in
+						self.selection.append(ColorPreset(primary: eachPrimary, luminance: eachLuminance))
+					}
+				}
+				
+//				if self.array.contains(value) {
+//					self.array = self.array.filter { $0 != value }
+//				} else {
+//					self.array.append(value)
+//				}
+			}
+		)
+	}
+	
+	var body: some View {
+		VStack {
+			HStack {
+				ForEach(selection) { color in
+					ColorBox(color: color)
+				}
+			}
+//			RoundedRectangle(cornerRadius: 25.0, style: .continuous)
+//				.frame(height: 20)
+//				.frame(maxWidth: .infinity)
+//				.foregroundColor(selection.getColor())
+			
+			HStack(alignment: .top) {
+				PrimarySelectSeveral(selection: severalPrimary)
+					.frame(minWidth: 100)
+					.padding()
+//				LuminanceSelectSeveral(selection: $severalLuminance)
+//					.frame(minWidth: 100)
+//					.padding()
+//				PrimarySelectSingle(selection: $selection.primary)
+//					.frame(minWidth: 100)
+//					.padding()
+//				LuminanceSelectSingle(selection: $selection.luminance, primary: selection.primary)
+//					.frame(minWidth: 100)
+//					.padding()
+			}
+		}
+	}
+}
+
+struct LabelColorBox<Content: View>: View {
 	var color: ColorPreset
 	var label: () -> Content
 	
@@ -93,10 +153,18 @@ struct LabelShowingColor<Content: View>: View {
 		Label {
 			label()
 		} icon: {
-			RoundedRectangle(cornerRadius: 4, style: .continuous)
-				.frame(width: 12, height: 12)
-				.foregroundColor(color.getColor())
+			ColorBox(color: color)
 		}
+	}
+}
+
+struct ColorBox: View {
+	var color: ColorPreset
+	
+	var body: some View {
+		RoundedRectangle(cornerRadius: 4, style: .continuous)
+			.frame(width: 12, height: 12)
+			.foregroundColor(color.getColor())
 	}
 }
 
@@ -107,7 +175,7 @@ struct PrimarySelectSingle: View {
 		Picker("Primary Colors", selection: $selection) {
 			ForEach(ColorPrimary.allCases, id: \.self) { color in
 				HStack {
-					LabelShowingColor(primary: color) {
+					LabelColorBox(primary: color) {
 						Text(color.rawValue)
 					}
 				}.tag(color)
@@ -126,7 +194,7 @@ struct PrimarySelectSeveral: View {
 			ForEach(ColorPrimary.allCases, id: \.self) { color in
 				HStack {
 					ToggleIncludeArray<ColorPrimary, AnyView>(value: color, array: $selection) {
-						AnyView(LabelShowingColor(primary: color) {
+						AnyView(LabelColorBox(primary: color) {
 							Text(color.rawValue)
 						})
 					}
@@ -170,7 +238,7 @@ struct LuminanceSelectSingle: View {
 		Picker("Color Luminance", selection: $selection) {
 			ForEach(ColorLuminance.allCases, id: \.self) { color in
 				HStack {
-					LabelShowingColor(luminance: color, primary: primary) {
+					LabelColorBox(luminance: color, primary: primary) {
 						Text("\(color.rawValue)")
 					}
 				}.tag(color)
@@ -190,7 +258,7 @@ struct LuminanceSelectSeveral: View {
 			ForEach(ColorLuminance.allCases, id: \.self) { color in
 				HStack {
 					ToggleIncludeArray<ColorLuminance, AnyView>(value: color, array: $selection) {
-						AnyView(LabelShowingColor(luminance: color, primary: primary) {
+						AnyView(LabelColorBox(luminance: color, primary: primary) {
 							Text("\(color.rawValue)")
 						})
 					}
@@ -199,135 +267,3 @@ struct LuminanceSelectSeveral: View {
 		}
 	}
 }
-
-// MARK: - MODEL
-
-struct ColorPreset: Equatable {
-	var primary: ColorPrimary
-	var luminance: ColorLuminance
-	
-	init(primary: ColorPrimary, luminance: ColorLuminance) {
-		self.primary = primary
-		self.luminance = luminance
-	}
-	
-	init?(_ from: String) {
-		guard let (primary, luminance) = ColorPreset.stringToColorComponents(from) else {
-			return nil
-		}
-		
-		self.primary = primary
-		self.luminance = luminance
-	}
-	
-	// TODO: add init for just string
-	
-	func getString() -> String {
-		return "\(primary).\(luminance.rawValue)"
-	}
-	
-	func getColor() -> Color {
-		return Color(getString())
-	}
-	
-	func getLabel() -> some View {
-//		Label {
-//			Text(getString())
-//		} icon: {
-//			RoundedRectangle(cornerRadius: 4, style: .continuous)
-//				.frame(width: 10, height: 10)
-//				.foregroundColor(getColor())
-//		}
-		LabelShowingColor(color: self) {
-			Text(getString())
-		}
-	}
-	
-	static func splitColorString(_ from: String) -> (String, String) {
-		let parts = from.components(separatedBy: ".")
-		return (parts[0], parts[1])
-	}
-	
-	static func stringToColorComponents(_ from: String) -> (ColorPrimary, ColorLuminance)? {
-		let (p, l) = ColorPreset.splitColorString(from)
-		
-		guard let primary = ColorPrimary(rawValue: p) else {
-			return nil
-		}
-		guard let intLuminance = Int(l) else {
-			return nil
-		}
-		guard let luminance = ColorLuminance(rawValue: intLuminance) else {
-			return nil
-		}
-		
-		return (primary, luminance)
-	}
-}
-
-enum ColorPrimary: String, CaseIterable {
-	case grey, red, orange, yellow, green, blue, purple
-}
-
-enum ColorLuminance: Int, CaseIterable {
-	case nearWhite = 100
-	case extraLight = 200
-	case light = 300
-	case normal = 400
-	case medium = 500
-	case semiDark = 600
-	case dark = 700
-	case extraDark = 800
-	case nearBlack = 900
-}
-
-// MARK: - HELPERS
-
-func getColorPalette(
-	primaries: [ColorPrimary],
-	luminance: [ColorLuminance]
-) -> [Color] {
-	var colors = [Color]()
-	for p in primaries {
-		for l in luminance {
-			colors.append(Color("\(p).\(l)"))
-		}
-	}
-
-	return colors
-}
-
-// MISC
-
-let bw: [Color] = [
-	Color("grey.100"),
-	Color("grey.200"),
-	Color("grey.300"),
-	Color("grey.400"),
-	Color("grey.500"),
-	Color("grey.600"),
-	Color("grey.700"),
-	Color("grey.800"),
-	Color("grey.900"),
-]
-
-let assortment: [Color] = [
-	Color("red.500"),
-	Color("orange.500"),
-	Color("yellow.500"),
-	Color("green.500"),
-	Color("blue.500"),
-	Color("purple.500"),
-	Color("red.400"),
-	Color("orange.400"),
-	Color("yellow.400"),
-	Color("green.400"),
-	Color("blue.400"),
-	Color("purple.400"),
-	Color("red.400"),
-	Color("orange.600"),
-	Color("yellow.600"),
-	Color("green.600"),
-	Color("blue.600"),
-	Color("purple.600"),
-]

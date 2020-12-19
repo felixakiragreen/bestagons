@@ -15,12 +15,12 @@ struct OptionsView: View {
 
 	var onChange: ((ApparatusConfig) -> Void)?
 	
-	@State private var showPopover: Bool = false
 	@State private var popovers = Popovers()
-	
-	struct Popovers {
+	private struct Popovers {
 		var stroke: Bool = false
 		var ground: Bool = false
+		var main: Bool = false
+		var palette: Bool = false
 	}
 
 	// MARK: - BODY
@@ -155,41 +155,63 @@ struct OptionsView: View {
 						
 					}
 					//.padding(.horizontal)
-				
-//					Button("Show popover") {
-//						 self.showPopover = true
-//					}
-					GroupBox {
-						HStack {
-							Text("stroke →")
-							options.colorStroke.getLabel()
-						}.frame(minWidth: 160)
-					}
-					.onTapGesture {
-						self.showPopover.toggle()
-					}.popover(
-						isPresented: self.$showPopover,
-						arrowEdge: .bottom
-					) {
-						VStack {
-							ColorPresetSelectSingle(selection: $options.colorStroke)
-						}.padding()
-					}
-					GroupBox {
-						HStack {
-							Text("ground →")
-							options.colorGround.getLabel()
-						}.frame(minWidth: 160)
-					}.onTapGesture {
-						self.popovers.ground.toggle()
-					}.popover(
-						isPresented: self.$popovers.ground,
-						arrowEdge: .bottom
-					) {
-						VStack {
-							ColorPresetSelectSingle(selection: $options.colorGround)
-						}.padding()
 
+					HStack {
+						ColorSelectPopover(show: self.$popovers.stroke) {
+							HStack {
+								Text("stroke →")
+								options.colorStroke.getLabel()
+							}.frame(minWidth: 160)
+						} content: {
+							ColorPresetSelectSingle(selection: $options.colorStroke)
+						}
+						ColorSelectPopover(show: self.$popovers.ground) {
+							HStack {
+								Text("ground →")
+								options.colorGround.getLabel()
+							}.frame(minWidth: 160)
+						} content: {
+							ColorPresetSelectSingle(selection: $options.colorGround)
+						}
+//						ColorSelectPopover(show: self.$popovers.main) {
+//							HStack {
+//								Text("main →")
+//								if let colorMain = config.colorMain {
+//									colorMain.getLabel()
+//								} else {
+//									Text("unset")
+//								}
+//							}.frame(minWidth: 160)
+//						} content: {
+//							ColorPresetSelectSingle(selection: $config.colorMain)
+//						}
+					}
+					
+					HStack {
+						GroupBox {
+							
+							ColorSelectPopover(show: self.$popovers.palette) {
+								VStack {
+									Text("Color Palette")
+									HStack {
+										ForEach(config.colorPalette) { color in
+											ColorBox(color: color)
+										}
+									}
+								}
+							} content: {
+								HStack {
+//									LuminanceSelectSeveral(selection: $severalLuminance)
+//										.frame(minWidth: 100)
+//										.padding()
+//									PrimarySelectSeveral(selection: $severalPrimary)
+//											.frame(minWidth: 100)
+//										 .padding()
+									ColorPresetSelectSingle(selection: $options.colorGround)
+								}
+							}
+							
+						}
 					}
 					/*
 					
@@ -289,6 +311,29 @@ struct IntField: View {
 	}
 }
 
+struct ColorSelectPopover<ContentLabel, Content>: View where ContentLabel: View, Content: View {
+	@Binding var show: Bool
+
+	var label: () -> ContentLabel
+	var content: () -> Content
+	
+	var body: some View {
+		GroupBox {
+			label()
+		}
+		.onTapGesture {
+			show.toggle()
+		}.popover(
+			isPresented: self.$show,
+			arrowEdge: .bottom
+		) {
+			VStack {
+				content()
+			}.padding()
+		}
+	}
+}
+
 // MARK: - MODEL
 
 struct ApparatusConfig: Equatable {
@@ -300,8 +345,8 @@ struct ApparatusConfig: Equatable {
 	
 	// colors
 
-	var colorPalette: [Color]
-	var colorMain: Color?
+	var colorPalette: [ColorPreset]
+	var colorMain: ColorPreset?
 	var colorMode: ColorMode
 	
 	var groupSize: Double
@@ -339,10 +384,10 @@ struct ApparatusConfig: Equatable {
 		verticalSymmetry: Bool = false,
 		roundness: Double = 0.1,
 		solidness: Double = 0.5,
-		colorPalette: [Color] = bw,
+//		colorPalette: [Color] = bw,
 //		colorPalette: [Color] = assortment,
-		colorMain: Color? = nil,
-//		colors: [Color] = colorPalette(primaries: [], luminance: <#T##[ColorLuminance]#>)
+		colorPalette: [ColorPreset] = getColorPalette(primaries: ColorPrimary.data, luminance: ColorLuminance.data),
+		colorMain: ColorPreset? = nil,
 		
 		colorMode: ColorMode = .random,
 		groupSize: Double = 0.8,
@@ -398,8 +443,8 @@ struct ApparatusOptions: Equatable {
 		rounding: Double = 0,
 		stroking: Double = 1,
 		
-		colorStroke: ColorPreset = ColorPreset("grey.900")!,
-		colorGround: ColorPreset = ColorPreset("grey.500")!
+		colorStroke: ColorPreset = ColorPreset("grey.900"),
+		colorGround: ColorPreset = ColorPreset("grey.500")
 	) {
 		self.showStroke = stroke
 		self.showFill = fill
