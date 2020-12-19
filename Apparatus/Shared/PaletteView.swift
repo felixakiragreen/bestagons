@@ -9,9 +9,9 @@ import SwiftUI
 
 struct PaletteView: View {
 	@State var singlePrimary: ColorPrimary = .grey
-	@State var severalPrimary: [ColorPrimary] = [.grey, .red]
+	@State var severalPrimary: [ColorPrimary] = [.red, .orange, .yellow, .green, .blue, .purple]
 	@State var singleLuminance: ColorLuminance = .nearWhite
-	@State var severalLuminance: [ColorLuminance] = [.nearWhite, .extraLight]
+	@State var severalLuminance: [ColorLuminance] = [.normal, .medium, .semiDark]
 	
 	@State var singleColor = ColorPreset(primary: .green, luminance: .normal)
 	
@@ -53,7 +53,11 @@ struct ColorPresetSelectSingle: View {
 	
 	var body: some View {
 		VStack {
-			selection.getLabel()
+			RoundedRectangle(cornerRadius: 25.0, style: .continuous)
+				.frame(height: 20)
+				.frame(maxWidth: .infinity)
+				.foregroundColor(selection.getColor())
+			
 			HStack(alignment: .top) {
 				PrimarySelectSingle(selection: $selection.primary)
 					.frame(minWidth: 100)
@@ -120,7 +124,7 @@ struct PrimarySelectSeveral: View {
 	var body: some View {
 		VStack(alignment: .leading) {
 			ForEach(ColorPrimary.allCases, id: \.self) { color in
-				return HStack {
+				HStack {
 					ToggleIncludeArray<ColorPrimary, AnyView>(value: color, array: $selection) {
 						AnyView(LabelShowingColor(primary: color) {
 							Text(color.rawValue)
@@ -135,7 +139,7 @@ struct PrimarySelectSeveral: View {
 
 struct ToggleIncludeArray<Element, Content>: View where Element: Equatable, Content: View {
 	var value: Element
-	@Binding var array: Array<Element>
+	@Binding var array: [Element]
 	var label: () -> Content
 	
 	var isOnProxy: Binding<Bool> {
@@ -184,7 +188,7 @@ struct LuminanceSelectSeveral: View {
 	var body: some View {
 		VStack(alignment: .leading) {
 			ForEach(ColorLuminance.allCases, id: \.self) { color in
-				return HStack {
+				HStack {
 					ToggleIncludeArray<ColorLuminance, AnyView>(value: color, array: $selection) {
 						AnyView(LabelShowingColor(luminance: color, primary: primary) {
 							Text("\(color.rawValue)")
@@ -240,8 +244,8 @@ struct ColorPreset: Equatable {
 	}
 	
 	static func splitColorString(_ from: String) -> (String, String) {
-		 let parts = from.components(separatedBy: ".")
-		 return (parts[0], parts[1])
+		let parts = from.components(separatedBy: ".")
+		return (parts[0], parts[1])
 	}
 	
 	static func stringToColorComponents(_ from: String) -> (ColorPrimary, ColorLuminance)? {
@@ -305,4 +309,25 @@ let bw: [Color] = [
 	Color("grey.700"),
 	Color("grey.800"),
 	Color("grey.900"),
+]
+
+let assortment: [Color] = [
+	Color("red.500"),
+	Color("orange.500"),
+	Color("yellow.500"),
+	Color("green.500"),
+	Color("blue.500"),
+	Color("purple.500"),
+	Color("red.400"),
+	Color("orange.400"),
+	Color("yellow.400"),
+	Color("green.400"),
+	Color("blue.400"),
+	Color("purple.400"),
+	Color("red.400"),
+	Color("orange.600"),
+	Color("yellow.600"),
+	Color("green.600"),
+	Color("blue.600"),
+	Color("purple.600"),
 ]
