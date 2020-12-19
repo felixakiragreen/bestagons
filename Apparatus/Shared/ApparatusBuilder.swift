@@ -14,81 +14,16 @@ TODOs
 all features from ApparatusGenerator
 
 noise
-symmetry
 
 initialTop & Left
 
 */
 
-// MARK: - Structs
-
-
-enum ColorMode {
-	case single, main, group, random
-}
-
-struct Block {
-	var h: Bool
-	var v: Bool
-	var inside: Bool /// inside / within / contained
-	var color: Color?
-	var id: Int?
-	
-	init(
-		h: Bool = false,
-		v: Bool = false,
-		inside: Bool = false,
-		color: Color? = nil,
-		id: Int? = nil
-	) {
-		self.h = h
-		self.v = v
-		self.inside = inside
-		
-		if let color = color {
-			self.color = color
-		}
-		if let id = id {
-			self.id = id
-		}
-	}
-
-	init(block: Block, h: Bool? = nil, v: Bool? = nil, id: Int? = nil) {
-		self.h = h ?? block.h
-		self.v = v ?? block.v
-		self.inside = block.inside
-		
-		if let color = block.color {
-			self.color = color
-		}
-		if let id = id ?? block.id {
-			self.id = id
-		}
-	}
-}
-
-// edge?
-struct BlockCorner {
-	var x1: Int
-	var y1: Int
-	var color: Color
-	var id: Int
-}
-
-struct BlockRect {
-	var x1: Int
-	var y1: Int
-	var w: Int
-	var h: Int
-	var color: Color
-	var id: Int
-}
-
-
-
-// MARK: - Generator
+// MARK: - GENERATOR
 
 class ApparatusGenerator {
+	
+	// TODO: reorganize :)
 	
 	var xDim: Int
 	var yDim: Int
@@ -460,11 +395,70 @@ class ApparatusGenerator {
 }
 
 
+// MARK: - MODEL
+
+enum ColorMode {
+	case single, main, group, random
+}
+
+struct Block {
+	var h: Bool
+	var v: Bool
+	var inside: Bool
+	var color: Color?
+	var id: Int?
+	
+	init(
+		h: Bool = false,
+		v: Bool = false,
+		inside: Bool = false,
+		color: Color? = nil,
+		id: Int? = nil
+	) {
+		self.h = h
+		self.v = v
+		self.inside = inside
+		
+		if let color = color {
+			self.color = color
+		}
+		if let id = id {
+			self.id = id
+		}
+	}
+
+	init(block: Block, h: Bool? = nil, v: Bool? = nil, id: Int? = nil) {
+		self.h = h ?? block.h
+		self.v = v ?? block.v
+		self.inside = block.inside
+		
+		if let color = block.color {
+			self.color = color
+		}
+		if let id = id ?? block.id {
+			self.id = id
+		}
+	}
+}
+
+struct BlockCorner {
+	var x1: Int
+	var y1: Int
+	var color: Color
+	var id: Int
+}
+
+struct BlockRect {
+	var x1: Int
+	var y1: Int
+	var w: Int
+	var h: Int
+	var color: Color
+	var id: Int
+}
 
 
-
-
-// MARK: - CONVERSION
+// MARK: - HELPERS (conversion)
 
 func convertLineGridToRect(grid: [[Block]]) -> [BlockRect] {
 	let nwCorners = getNWCorners(grid: grid)
@@ -500,13 +494,10 @@ func extendCornersToRect(grid: [[Block]], corners: [BlockCorner]) -> [BlockRect]
 			accX += 1
 		} while c.x1 + accX < grid[c.y1].count && !grid[c.y1][c.x1 + accX].v
 		
-		//	(c.x1 + accx < grid[c.y1].length && !grid[c.y1][c.x1 + accx].v) {
-		
 		var accY = 0
 		repeat {
 			accY += 1
 		} while c.y1 + accY < grid.count && !grid[c.y1 + accY][c.x1].h
-		// (c.y1 + accy < grid.length && !grid[c.y1 + accy][c.x1].h)
 		
 		return BlockRect(x1: c.x1, y1: c.y1, w: accX, h: accY, color: c.color, id: c.id)
 	}
