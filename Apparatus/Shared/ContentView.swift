@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
+	// MARK: - PROPS
 	@State var apparatus = ApparatusGenerator(config: ApparatusConfig())
 	@State var rects = [BlockRect]()
 	
 	@State var options = ApparatusOptions()
 	@State var config = ApparatusConfig()
 	
+	// MARK: - BODY
 	var body: some View {
 		let size = CGFloat(options.sizing)
 		let pad = CGFloat(options.padding)
@@ -71,9 +73,10 @@ struct ContentView: View {
 		}
 	}
 	
+	// MARK: - UPDATE
 	func update() {
 		apparatus = ApparatusGenerator(config: config)
-		//	print(config)
+//		print(config)
 		let grid = apparatus.generate()
 //		print(grid)
 		rects = convertLineGridToRect(grid: grid)
@@ -89,6 +92,7 @@ struct ContentView: View {
 	}
 }
 
+// MARK: - PREVIEW
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
 		ContentView()

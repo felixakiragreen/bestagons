@@ -37,6 +37,7 @@ struct ArtView: View {
 	}
 }
 
+// MARK: - PREVIEW
 struct ArtView_Previews: PreviewProvider {
 	static let config = ApparatusConfig()
 	static let apparatus = ApparatusGenerator(config: config)
