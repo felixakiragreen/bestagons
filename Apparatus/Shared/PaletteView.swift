@@ -33,17 +33,7 @@ struct PaletteView: View {
 					.frame(minWidth: 100)
 					.padding()
 			}
-			VStack {
-				singleColor.getLabel()
-				HStack {
-					PrimarySelectSingle(selection: $singleColor.primary)
-						.frame(minWidth: 100)
-						.padding()
-					LuminanceSelectSingle(selection: $singleColor.luminance, primary: singleColor.primary)
-						.frame(minWidth: 100)
-						.padding()
-				}
-			}
+			ColorPresetSelectSingle(selection: $singleColor)
 		}
 	}
 }
@@ -58,6 +48,24 @@ struct PaletteView_Previews: PreviewProvider {
 
 // MARK: - SUBVIEWS
 
+struct ColorPresetSelectSingle: View {
+	@Binding var selection: ColorPreset
+	
+	var body: some View {
+		VStack {
+			selection.getLabel()
+			HStack(alignment: .top) {
+				PrimarySelectSingle(selection: $selection.primary)
+					.frame(minWidth: 100)
+					.padding()
+				LuminanceSelectSingle(selection: $selection.luminance, primary: selection.primary)
+					.frame(minWidth: 100)
+					.padding()
+			}
+		}
+	}
+}
+
 struct LabelShowingColor<Content: View>: View {
 	var color: ColorPreset
 	var label: () -> Content
@@ -67,14 +75,22 @@ struct LabelShowingColor<Content: View>: View {
 		self.label = content
 	}
 	
+	init(luminance: ColorLuminance, primary: ColorPrimary?, _ content: @escaping () -> Content) {
+		self.color = ColorPreset(primary: primary ?? .grey, luminance: luminance)
+		self.label = content
+	}
+	
+	init(color: ColorPreset, _ content: @escaping () -> Content) {
+		self.color = color
+		self.label = content
+	}
+	
 	var body: some View {
 		Label {
 			label()
-//			Text(color.primary)
 		} icon: {
 			RoundedRectangle(cornerRadius: 4, style: .continuous)
-				.frame(width: 10, height: 10)
-//				.foregroundColor(Color("\(color).400"))
+				.frame(width: 12, height: 12)
 				.foregroundColor(color.getColor())
 		}
 	}
@@ -90,14 +106,6 @@ struct PrimarySelectSingle: View {
 					LabelShowingColor(primary: color) {
 						Text(color.rawValue)
 					}
-//					Label {
-//						Text(color.rawValue)
-////							.foregroundColor(Color("\(color).300"))
-//					} icon: {
-//						RoundedRectangle(cornerRadius: 4, style: .continuous)
-//							.frame(width: 10, height: 10)
-//							.foregroundColor(Color("\(color).400"))
-//					}
 				}.tag(color)
 			}
 		}
@@ -113,15 +121,10 @@ struct PrimarySelectSeveral: View {
 		VStack(alignment: .leading) {
 			ForEach(ColorPrimary.allCases, id: \.self) { color in
 				return HStack {
-					ToggleIncludeArray<ColorPrimary, Label>(value: color, array: $selection) {
-						Label {
+					ToggleIncludeArray<ColorPrimary, AnyView>(value: color, array: $selection) {
+						AnyView(LabelShowingColor(primary: color) {
 							Text(color.rawValue)
-			//					.foregroundColor(Color("\(value).300"))
-						} icon: {
-							RoundedRectangle(cornerRadius: 4, style: .continuous)
-								.frame(width: 10, height: 10)
-								.foregroundColor(Color("\(color).400"))
-						}
+						})
 					}
 					
 				}.tag(color)
@@ -155,8 +158,6 @@ struct ToggleIncludeArray<Element, Content>: View where Element: Equatable, Cont
 	}
 }
 
-
-
 struct LuminanceSelectSingle: View {
 	@Binding var selection: ColorLuminance
 	var primary: ColorPrimary?
@@ -165,12 +166,8 @@ struct LuminanceSelectSingle: View {
 		Picker("Color Luminance", selection: $selection) {
 			ForEach(ColorLuminance.allCases, id: \.self) { color in
 				HStack {
-					Label {
+					LabelShowingColor(luminance: color, primary: primary) {
 						Text("\(color.rawValue)")
-					} icon: {
-						RoundedRectangle(cornerRadius: 4, style: .continuous)
-							.frame(width: 10, height: 10)
-							.foregroundColor(Color("\(primary ?? .grey).\(color.rawValue)"))
 					}
 				}.tag(color)
 			}
@@ -188,14 +185,10 @@ struct LuminanceSelectSeveral: View {
 		VStack(alignment: .leading) {
 			ForEach(ColorLuminance.allCases, id: \.self) { color in
 				return HStack {
-					ToggleIncludeArray<ColorLuminance, Label>(value: color, array: $selection) {
-						Label {
+					ToggleIncludeArray<ColorLuminance, AnyView>(value: color, array: $selection) {
+						AnyView(LabelShowingColor(luminance: color, primary: primary) {
 							Text("\(color.rawValue)")
-						} icon: {
-							RoundedRectangle(cornerRadius: 4, style: .continuous)
-								.frame(width: 10, height: 10)
-								.foregroundColor(Color("\(primary ?? .grey).\(color.rawValue)"))
-						}
+						})
 					}
 				}.tag(color)
 			}
@@ -205,11 +198,20 @@ struct LuminanceSelectSeveral: View {
 
 // MARK: - MODEL
 
-struct ColorPreset {
+struct ColorPreset: Equatable {
 	var primary: ColorPrimary
 	var luminance: ColorLuminance
 	
 	init(primary: ColorPrimary, luminance: ColorLuminance) {
+		self.primary = primary
+		self.luminance = luminance
+	}
+	
+	init?(_ from: String) {
+		guard let (primary, luminance) = ColorPreset.stringToColorComponents(from) else {
+			return nil
+		}
+		
 		self.primary = primary
 		self.luminance = luminance
 	}
@@ -225,13 +227,37 @@ struct ColorPreset {
 	}
 	
 	func getLabel() -> some View {
-		Label {
+//		Label {
+//			Text(getString())
+//		} icon: {
+//			RoundedRectangle(cornerRadius: 4, style: .continuous)
+//				.frame(width: 10, height: 10)
+//				.foregroundColor(getColor())
+//		}
+		LabelShowingColor(color: self) {
 			Text(getString())
-		} icon: {
-			RoundedRectangle(cornerRadius: 4, style: .continuous)
-				.frame(width: 10, height: 10)
-				.foregroundColor(getColor())
 		}
+	}
+	
+	static func splitColorString(_ from: String) -> (String, String) {
+		 let parts = from.components(separatedBy: ".")
+		 return (parts[0], parts[1])
+	}
+	
+	static func stringToColorComponents(_ from: String) -> (ColorPrimary, ColorLuminance)? {
+		let (p, l) = ColorPreset.splitColorString(from)
+		
+		guard let primary = ColorPrimary(rawValue: p) else {
+			return nil
+		}
+		guard let intLuminance = Int(l) else {
+			return nil
+		}
+		guard let luminance = ColorLuminance(rawValue: intLuminance) else {
+			return nil
+		}
+		
+		return (primary, luminance)
 	}
 }
 
