@@ -59,7 +59,7 @@ struct ContentView: View {
 						)
 						.padding([.bottom, .trailing], size)
 						.padding(.bottom, size)
-						.background(options.colorGround)
+						.background(options.colorGround.getColor())
 						.animation(.default)
 						
 						Spacer()

@@ -15,7 +15,13 @@ struct OptionsView: View {
 
 	var onChange: ((ApparatusConfig) -> Void)?
 	
-	@State private var showPopover: Bool = true
+	@State private var showPopover: Bool = false
+	@State private var popovers = Popovers()
+	
+	struct Popovers {
+		var stroke: Bool = false
+		var ground: Bool = false
+	}
 
 	// MARK: - BODY
 	var body: some View {
@@ -112,6 +118,12 @@ struct OptionsView: View {
 						step: 1,
 						label: "rounding"
 					)
+					Slideridoo(
+						value: $options.stroking,
+						range: 0...16,
+						step: 1,
+						label: "stroking"
+					)
 					HStack {
 					}
 				}
@@ -143,26 +155,39 @@ struct OptionsView: View {
 						
 					}
 					//.padding(.horizontal)
-					Text("TODO: add stroke color")
+				
 //					Button("Show popover") {
 //						 self.showPopover = true
 //					}
 					GroupBox {
-						Label {
-							Text("color.rawValue")
-						} icon: {
-							RoundedRectangle(cornerRadius: 4, style: .continuous)
-								.frame(width: 10, height: 10)
-								.foregroundColor(Color("grey.100"))
-						}
-					}.onTapGesture {
+						HStack {
+							Text("stroke →")
+							options.colorStroke.getLabel()
+						}.frame(minWidth: 160)
+					}
+					.onTapGesture {
 						self.showPopover.toggle()
 					}.popover(
 						isPresented: self.$showPopover,
 						arrowEdge: .bottom
 					) {
 						VStack {
-							
+							ColorPresetSelectSingle(selection: $options.colorStroke)
+						}.padding()
+					}
+					GroupBox {
+						HStack {
+							Text("ground →")
+							options.colorGround.getLabel()
+						}.frame(minWidth: 160)
+					}.onTapGesture {
+						self.popovers.ground.toggle()
+					}.popover(
+						isPresented: self.$popovers.ground,
+						arrowEdge: .bottom
+					) {
+						VStack {
+							ColorPresetSelectSingle(selection: $options.colorGround)
 						}.padding()
 
 					}
@@ -314,29 +339,29 @@ struct ApparatusConfig: Equatable {
 		verticalSymmetry: Bool = false,
 		roundness: Double = 0.1,
 		solidness: Double = 0.5,
-		colorPalette: [Color] = bw,
+//		colorPalette: [Color] = bw,
 		colorMain: Color? = nil,
 //		colors: [Color] = colorPalette(primaries: [], luminance: <#T##[ColorLuminance]#>)
-//		colors: [Color] = [
-//			Color("red.500"),
-//			Color("orange.500"),
-//			Color("yellow.500"),
-//			Color("green.500"),
-//			Color("blue.500"),
-//			Color("purple.500"),
-//			Color("red.400"),
-//			Color("orange.400"),
-//			Color("yellow.400"),
-//			Color("green.400"),
-//			Color("blue.400"),
-//			Color("purple.400"),
-//			Color("red.400"),
-//			Color("orange.600"),
-//			Color("yellow.600"),
-//			Color("green.600"),
-//			Color("blue.600"),
-//			Color("purple.600"),
-//		],
+		colorPalette: [Color] = [
+			Color("red.500"),
+			Color("orange.500"),
+			Color("yellow.500"),
+			Color("green.500"),
+			Color("blue.500"),
+			Color("purple.500"),
+			Color("red.400"),
+			Color("orange.400"),
+			Color("yellow.400"),
+			Color("green.400"),
+			Color("blue.400"),
+			Color("purple.400"),
+			Color("red.400"),
+			Color("orange.600"),
+			Color("yellow.600"),
+			Color("green.600"),
+			Color("blue.600"),
+			Color("purple.600"),
+		],
 		
 		colorMode: ColorMode = .random,
 		groupSize: Double = 0.8,
@@ -376,12 +401,13 @@ struct ApparatusOptions: Equatable {
 	var sizing: Double
 	var padding: Double
 	var rounding: Double
+	var stroking: Double
 
-	var colorStroke: Color
-	var colorGround: Color
+	var colorStroke: ColorPreset
+	var colorGround: ColorPreset
 
 	init(
-		stroke: Bool = false,
+		stroke: Bool = true,
 		fill: Bool = true,
 		debug: Bool = false,
 		preserveSeed: Bool = true,
@@ -389,9 +415,10 @@ struct ApparatusOptions: Equatable {
 		sizing: Double = 8,
 		padding: Double = 0,
 		rounding: Double = 0,
+		stroking: Double = 1,
 		
-		colorStroke: Color = Color("grey.900"),
-		colorGround: Color = Color("grey.500")
+		colorStroke: ColorPreset = ColorPreset("grey.900")!,
+		colorGround: ColorPreset = ColorPreset("grey.500")!
 	) {
 		self.showStroke = stroke
 		self.showFill = fill
@@ -401,6 +428,7 @@ struct ApparatusOptions: Equatable {
 		self.sizing = sizing
 		self.padding = padding
 		self.rounding = rounding
+		self.stroking = stroking
 		
 		self.colorStroke = colorStroke
 		self.colorGround = colorGround
