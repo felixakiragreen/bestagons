@@ -14,7 +14,8 @@ struct PaletteView: View {
 	@State var severalLuminance: [ColorLuminance] = ColorLuminance.data
 	
 	@State var singleColor = ColorPreset(primary: .green, luminance: .normal)
-	@State var multipleColor: [ColorPreset] = getColorPalette(primaries: ColorPrimary.data, luminance: ColorLuminance.data)
+//	@State var multipleColor: [ColorPreset] = getColorPalette(primaries: ColorPrimary.data, luminance: ColorLuminance.data)
+	@State var multipleColor: ColorPresetPalette = ColorPresetPalette(primaries: ColorPrimary.data, luminance: ColorLuminance.data)
 	
 	var body: some View {
 		VStack {
@@ -73,52 +74,52 @@ struct ColorPresetSelectSingle: View {
 }
 
 struct ColorPresetSelectSeveral: View {
-	@Binding var selection: [ColorPreset]
+	@Binding var selection: ColorPresetPalette
 	
-	var severalPrimary: Binding<[ColorPrimary]> {
-		Binding<[ColorPrimary]>(
-			get: {
-				ColorPrimary.allCases.filter { eachPrimary in
-					self.selection.contains { eachColor in
-						return eachColor.primary == eachPrimary
-					}
-				}
-			},
-			set: { primaries in
-				primaries.forEach { eachPrimary in
-					ColorLuminance.allCases.forEach { eachLuminance in
-						self.selection.append(ColorPreset(primary: eachPrimary, luminance: eachLuminance))
-					}
-				}
-				
-//				if self.array.contains(value) {
-//					self.array = self.array.filter { $0 != value }
-//				} else {
-//					self.array.append(value)
+//	var severalPrimary: Binding<[ColorPrimary]> {
+//		Binding<[ColorPrimary]>(
+//			get: {
+//				ColorPrimary.allCases.filter { eachPrimary in
+//					self.selection.contains { eachColor in
+//						return eachColor.primary == eachPrimary
+//					}
 //				}
-			}
-		)
-	}
+//			},
+//			set: { primaries in
+//				primaries.forEach { eachPrimary in
+//					ColorLuminance.allCases.forEach { eachLuminance in
+//						self.selection.append(ColorPreset(primary: eachPrimary, luminance: eachLuminance))
+//					}
+//				}
+//
+////				if self.array.contains(value) {
+////					self.array = self.array.filter { $0 != value }
+////				} else {
+////					self.array.append(value)
+////				}
+//			}
+//		)
+//	}
 	
 	var body: some View {
 		VStack {
-			HStack {
-				ForEach(selection) { color in
-					ColorBox(color: color)
+			VStack {
+				ForEach(selection.primaries) { primary in
+					HStack {
+						ForEach(selection.luminance) { luminance in
+							ColorBox(color: ColorPreset(primary: primary, luminance: luminance))
+						}
+					}
 				}
 			}
-//			RoundedRectangle(cornerRadius: 25.0, style: .continuous)
-//				.frame(height: 20)
-//				.frame(maxWidth: .infinity)
-//				.foregroundColor(selection.getColor())
 			
 			HStack(alignment: .top) {
-				PrimarySelectSeveral(selection: severalPrimary)
+				PrimarySelectSeveral(selection: $selection.primaries)
 					.frame(minWidth: 100)
 					.padding()
-//				LuminanceSelectSeveral(selection: $severalLuminance)
-//					.frame(minWidth: 100)
-//					.padding()
+				LuminanceSelectSeveral(selection: $selection.luminance)
+					.frame(minWidth: 100)
+					.padding()
 //				PrimarySelectSingle(selection: $selection.primary)
 //					.frame(minWidth: 100)
 //					.padding()

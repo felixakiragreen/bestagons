@@ -68,7 +68,7 @@ struct OptionsView: View {
 							Slideridoo(
 								value: $config.roundness,
 								range: 0...1,
-								label: "round-y"
+								label: "roundness"
 							)
 							Slideridoo(
 								value: $config.solidness,
@@ -156,7 +156,7 @@ struct OptionsView: View {
 					}
 					//.padding(.horizontal)
 
-					HStack {
+					VStack {
 						ColorSelectPopover(show: self.$popovers.stroke) {
 							HStack {
 								Text("stroke →")
@@ -193,9 +193,13 @@ struct OptionsView: View {
 							ColorSelectPopover(show: self.$popovers.palette) {
 								VStack {
 									Text("Color Palette")
-									HStack {
-										ForEach(config.colorPalette) { color in
-											ColorBox(color: color)
+									VStack {
+										ForEach(config.colorPalette.primaries) { primary in
+											HStack {
+												ForEach(config.colorPalette.luminance) { luminance in
+													ColorBox(color: ColorPreset(primary: primary, luminance: luminance))
+												}
+											}
 										}
 									}
 								}
@@ -207,7 +211,7 @@ struct OptionsView: View {
 //									PrimarySelectSeveral(selection: $severalPrimary)
 //											.frame(minWidth: 100)
 //										 .padding()
-									ColorPresetSelectSingle(selection: $options.colorGround)
+									ColorPresetSelectSeveral(selection: $config.colorPalette)
 								}
 							}
 							
@@ -264,8 +268,8 @@ struct Slideridoo: View {
 						Text("\(label) →")
 							.font(.caption)
 							.foregroundColor(Color.secondary)
-						Text("\(value, specifier: "%g")")
-					}.frame(width: 80, alignment: .leading)
+						// Text("\(value, specifier: "%g")")
+					}.frame(width: 64, alignment: .leading)
 				}
 			} else {
 				Slider(value: $value, in: range) {
@@ -274,11 +278,13 @@ struct Slideridoo: View {
 							.font(.caption)
 							.foregroundColor(Color.secondary)
 						Text("\(value, specifier: "%.2f")")
-					}.frame(width: 120, alignment: .leading)
+					}.frame(width: 100, alignment: .leading)
 				}
 			}
 			if step != nil {
-				Stepper(value: $value, in: 0...99, step: step!, label: {})
+				DoubleField(value: $value)
+					.frame(width: 60)
+				// Stepper(value: $value, in: 0...99, step: step!, label: {})
 			}
 		}
 		.padding(.horizontal)
@@ -305,6 +311,34 @@ struct IntField: View {
 
 	private func toString(from value: Int) -> String {
 		guard let s = NumberFormatter().string(from: NSNumber(value: value)) else {
+			return ""
+		}
+		return s
+	}
+}
+
+struct DoubleField: View {
+	@Binding var value: Double
+
+	var valueProxy: Binding<String> {
+		Binding<String>(
+			get: { self.toString(from: self.value) },
+			set: {
+				if let num = NumberFormatter().number(from: $0) {
+					self.value = num.doubleValue
+				}
+			}
+		)
+	}
+
+	var body: some View {
+		TextField("", text: valueProxy)
+	}
+
+	private func toString(from value: Double) -> String {
+		let formatter = NumberFormatter()
+		formatter.numberStyle = .none
+		guard let s = formatter.string(from: NSNumber(value: value)) else {
 			return ""
 		}
 		return s
@@ -345,7 +379,7 @@ struct ApparatusConfig: Equatable {
 	
 	// colors
 
-	var colorPalette: [ColorPreset]
+	var colorPalette: ColorPresetPalette
 	var colorMain: ColorPreset?
 	var colorMode: ColorMode
 	
@@ -386,7 +420,28 @@ struct ApparatusConfig: Equatable {
 		solidness: Double = 0.5,
 //		colorPalette: [Color] = bw,
 //		colorPalette: [Color] = assortment,
-		colorPalette: [ColorPreset] = getColorPalette(primaries: ColorPrimary.data, luminance: ColorLuminance.data),
+//		colorPalette: [ColorPreset] = getColorPalette(primaries: [.green, .blue, .purple], luminance: [
+//			.nearWhite,
+//			.extraLight,
+//			.light,
+//			.normal,
+//			.medium,
+//			.semiDark,
+//			.dark,
+//			.extraDark,
+//			.nearBlack
+//		]),
+		colorPalette: ColorPresetPalette = ColorPresetPalette(primaries: [.green, .blue, .purple], luminance: [
+			.nearWhite,
+			.extraLight,
+			.light,
+			.normal,
+			.medium,
+			.semiDark,
+			.dark,
+			.extraDark,
+			.nearBlack
+		]),
 		colorMain: ColorPreset? = nil,
 		
 		colorMode: ColorMode = .random,

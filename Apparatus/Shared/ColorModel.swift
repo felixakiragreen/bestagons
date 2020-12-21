@@ -100,6 +100,31 @@ struct ColorPreset: Equatable, Identifiable {
 	}
 }
 
+// TODO: add a guard that you can't deselect all of them
+struct ColorPresetPalette: Equatable {
+	var primaries: [ColorPrimary]
+	var luminance: [ColorLuminance]
+	
+	init(primaries: [ColorPrimary], luminance: [ColorLuminance]) {
+		
+		self.primaries = primaries
+		self.luminance = luminance
+	}
+	
+	
+	func getColorPresets() -> [ColorPreset] {
+		var colors = [ColorPreset]()
+		for p in primaries {
+			for l in luminance {
+				colors.append(ColorPreset(primary: p, luminance: l))
+			}
+		}
+
+		return colors
+	}
+}
+
+
 /**
 
 TODO: add
@@ -117,6 +142,10 @@ enum ColorPrimary: String, CaseIterable {
 	case grey, red, orange, yellow, green, blue, purple
 }
 
+extension ColorPrimary: Identifiable {
+	 var id: String { rawValue }
+}
+
 enum ColorLuminance: Int, CaseIterable {
 	case nearWhite = 100
 	case extraLight = 200
@@ -127,6 +156,10 @@ enum ColorLuminance: Int, CaseIterable {
 	case dark = 700
 	case extraDark = 800
 	case nearBlack = 900
+}
+
+extension ColorLuminance: Identifiable {
+	 var id: Int { rawValue }
 }
 
 extension ColorPrimary {

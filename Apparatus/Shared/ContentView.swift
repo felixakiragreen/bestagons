@@ -44,13 +44,14 @@ struct ContentView: View {
 							Text("Regenerate")
 						}
 						.padding()
-						Text("TODO: consider adding shape/color")
+//						Text("TODO: consider adding shape/color")
 					} //: VSTACK - Options
-					.frame(width: 320)
+					.frame(width: 360)
 				
 					VStack {
 						Spacer()
-						
+//						Text("hexis.wtf")
+//							.foregroundColor(ColorPreset(primary: .blue, luminance: .medium).getColor())
 						ArtView(config: $config, options: $options, rects: rects, size: size, pad: pad)
 						.frame(
 							width: CGFloat(apparatus.xDim) * (size + pad),
@@ -59,9 +60,12 @@ struct ContentView: View {
 						)
 						.padding([.bottom, .trailing], size)
 						.padding(.bottom, size)
+						.padding(size * 2)
 						.background(options.colorGround.getColor())
 						.animation(.default)
+						.drawingGroup()
 						
+//						Text("s01e01")
 						Spacer()
 					} //: VSTACK - Apparatus Side
 				} //: VSTACK - Top

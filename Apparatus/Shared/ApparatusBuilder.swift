@@ -35,6 +35,7 @@ class ApparatusGenerator {
 	var chanceVertical: Double
 	
 	var colors: [ColorPreset]
+	var colorPalette: ColorPresetPalette
 	
 	var colorMode: ColorMode
 	var groupSize: Double
@@ -70,7 +71,8 @@ class ApparatusGenerator {
 		self.chanceNew = config.chanceNew
 		self.chanceExtend = config.chanceExtend
 		self.chanceVertical = config.chanceVertical
-		self.colors = config.colorPalette
+		self.colors = config.colorPalette.getColorPresets()
+		self.colorPalette = config.colorPalette
 		self.colorMode = config.colorMode
 		self.groupSize = config.groupSize
 		self.hSymmetric = config.hSymmetric
@@ -84,7 +86,7 @@ class ApparatusGenerator {
 		self.idX = 0
 		self.idY = 0
 		self.idCounter = 0
-		self.colorMain = config.colorPalette.randomElement() ?? ColorPreset()
+		self.colorMain = config.colorPalette.getColorPresets().randomElement() ?? ColorPreset()
 	}
 	
 	func getIdAndIncrement() -> Int {
