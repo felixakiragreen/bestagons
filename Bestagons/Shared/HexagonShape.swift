@@ -14,13 +14,13 @@ struct HexagonShapeView: View {
 	var body: some View {
 		VStack {
 			HStack {
-//				ManualHexagon(fill: Color("blue.400"))
-//				RegularHexagon(fill: Color("orange.400"))
-//				StretchyHexagon(fill: Color("purple.400"), trunk: 0)
-//				StretchyHexagon(fill: Color("green.400"), trunk: .infinity)
+				ManualHexagon(fill: Color("blue.400"))
+				RegularHexagon(fill: Color("orange.400"))
+				StretchyHexagon(fill: Color("purple.400"), trunk: 0)
+				StretchyHexagon(fill: Color("green.400"), trunk: .infinity)
 			}
 			HStack {
-//				ManualHexagonalRightBevel()
+				ManualHexagonalRightBevel()
 			}
 		}
 	}

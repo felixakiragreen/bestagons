@@ -64,7 +64,7 @@ struct OptionsView: View {
 						}
 					}.padding(.horizontal)
 					Group {
-						if !config.simple {
+//						if !config.simple {
 							Slideridoo(
 								value: $config.roundness,
 								range: 0...1,
@@ -80,7 +80,7 @@ struct OptionsView: View {
 								range: 0...1,
 								label: "compact"
 							)
-						}
+//						}
 					}.animation(.default)
 				}
 			} //: GROUPBOX - shape
