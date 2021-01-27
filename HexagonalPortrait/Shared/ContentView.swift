@@ -15,10 +15,50 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 
+/**
+TODO:
+- [ ] add a title & subtitle (like hexis) so I can add labels to it
+*/
+
 struct ContentView: View {
+	
+	// MARK: - PROPS
+	
+	@State var showControlPanel = false
+	@State var isReversing = false
+	@State var isLooping = true
+	@State var animationDuration = 5.0
+	@State var animationPause = 2.0
+
 	// MARK: - BODY
 	var body: some View {
-		PortraitView(initiallyVisible: true)
+		VStack {
+			if showControlPanel {
+				ControlPanel(
+					isReversing: $isReversing,
+					isLooping: $isLooping,
+					animationDuration: $animationDuration,
+					animationPause: $animationPause,
+					showControlPanel: $showControlPanel
+				)
+			} else {
+				PortraitView(
+					initiallyVisible: true,
+					isReversing: $isReversing,
+					isLooping: $isLooping,
+					animationDuration: animationDuration,
+					animationPause: animationPause
+				)
+			}
+			
+		}
+		.onTapGesture(count: 2) {
+			if !showControlPanel {
+				withAnimation {
+					showControlPanel.toggle()
+				}
+			}
+		}
 	}
 }
 
