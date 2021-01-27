@@ -6,15 +6,19 @@
 //
 
 import SwiftUI
-
-
-
+import Combine
 
 // MARK: - PREVIEW
 
 struct PortraitView_Previews: PreviewProvider {
 	static var previews: some View {
-		PortraitView(initiallyVisible: true)
+		PortraitView(
+			initiallyVisible: true,
+			isReversing: .constant(false),
+			isLooping: .constant(true),
+			animationDuration: 2.0,
+			animationPause: 1.0
+		)
 	}
 }
 
@@ -43,14 +47,17 @@ struct PortraitView: View {
 	// MARK: - PROPS
 	
 	var initiallyVisible = false
-	var initiallyAnimating = false
+	var initiallyAnimating = true
 	
 	// MARK: - STATE
 	
-	@State var animationTimeIsForward = true
-	@State var isReversing = true
-	@State var isLooping = false
-	@State var animationDuration = 2.0
+	@Binding var isReversing: Bool
+	@Binding var isLooping: Bool
+	var animationDuration: Double
+	var animationPause: Double
+	
+//	@State var timer: Timer.TimerPublisher = Timer.publish(every: 5, on: .main, in: .common)
+//	@State var timer: Publishers.Autoconnect<Timer.TimerPublisher>
 	
 	@State var bgVisible = false
 	@State var bgAxP = AxP(start: 0.0, end: 0.35)
@@ -104,19 +111,20 @@ struct PortraitView: View {
 	
 	@State var material: Int = 8
 	
+	var bgAnimation: Animation { return proportionallyDelayedAx(bgAxP) }
+	var headAnimation: Animation { return proportionallyDelayedAx(headAxP) }
+	var chestAnimation: Animation { return proportionallyDelayedAx(chestAxP) }
+	var hairAnimation: Animation { return proportionallyDelayedAx(hairAxP) }
+		
+
 	// MARK: - BODY
 	
 	var body: some View {
-		let bgAnimation = proportionallyDelayedAx(bgAxP)
-		let headAnimation = proportionallyDelayedAx(headAxP)
-		let chestAnimation = proportionallyDelayedAx(chestAxP)
-		let hairAnimation = proportionallyDelayedAx(hairAxP)
-//		let shadowAnimation = proportionallyDelayedAx(shadowAxP)
+		let timer = Timer.publish(every: animationDuration + animationPause, on: .main, in: .common).autoconnect()
 		
 		return ZStack {
 			if let blurMaterial = materials[optional: material] {
 				VisualEffectBlur(material: blurMaterial)
-//					.opacity(0.5)
 			}
 			Color.clear
 				.onAppear {
@@ -125,6 +133,14 @@ struct PortraitView: View {
 						self.headVisible.toggle()
 						self.chestVisible.toggle()
 						self.hairVisible.toggle()
+					}
+					if initiallyAnimating {
+						animate()
+					}
+				}
+				.onReceive(timer) { _ in
+					if isLooping {
+						animate()
 					}
 				}
 			
@@ -169,23 +185,7 @@ struct PortraitView: View {
 //							material = 0
 //						}
 //						print("bla", materialNames[optional: material])
-						isReversing.toggle()
-						
-						withAnimation(bgAnimation) {
-							bgVisible.toggle()
-						}
-
-						withAnimation(headAnimation) {
-							headVisible.toggle()
-						}
-
-						withAnimation(chestAnimation) {
-							chestVisible.toggle()
-						}
-
-						withAnimation(hairAnimation) {
-							hairVisible.toggle()
-						}
+//						animate()
 					}
 				} //: RIGHT
 				.aspectRatio(1, contentMode: .fit)
@@ -197,9 +197,30 @@ struct PortraitView: View {
 
 	}
 	
-	func proportionallyDelayedAx(
-		_ proportion: AxP
-	) -> Animation {
+	// MARK: - FUNCS
+
+	private func animate() -> Void {
+		print("ANIMATING")
+		isReversing.toggle()
+		
+		withAnimation(bgAnimation) {
+			bgVisible.toggle()
+		}
+		
+		withAnimation(headAnimation) {
+			headVisible.toggle()
+		}
+		
+		withAnimation(chestAnimation) {
+			chestVisible.toggle()
+		}
+		
+		withAnimation(hairAnimation) {
+			hairVisible.toggle()
+		}
+	}
+	
+	private func proportionallyDelayedAx(_ proportion: AxP) -> Animation {
 		// start: proportion of 0.0 - 1.0 so 0.1 would start 10% of the way into the animation
 		// end: proportion of 0.0 - 1.0 so 1.0 would end at the end of the whole animation
 		
