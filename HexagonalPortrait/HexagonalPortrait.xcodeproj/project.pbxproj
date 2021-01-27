@@ -16,6 +16,10 @@
 		1D53E57725C0816600B4E1BE /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D53E56A25C0816600B4E1BE /* Colors.swift */; };
 		1D53E57825C0816600B4E1BE /* Nifty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D53E56B25C0816600B4E1BE /* Nifty.swift */; };
 		1D53E57925C0816600B4E1BE /* Nifty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D53E56B25C0816600B4E1BE /* Nifty.swift */; };
+		1D7A4DB325C1D7690007A37C /* ControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7A4DB225C1D7690007A37C /* ControlPanel.swift */; };
+		1D7A4DB425C1D7690007A37C /* ControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7A4DB225C1D7690007A37C /* ControlPanel.swift */; };
+		1D7A4DBA25C1D9B60007A37C /* DoubleField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7A4DB925C1D9B60007A37C /* DoubleField.swift */; };
+		1D7A4DBB25C1D9B60007A37C /* DoubleField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7A4DB925C1D9B60007A37C /* DoubleField.swift */; };
 		1DCA632B25BF2AFC002C9071 /* HexagonalPortraitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCA631825BF2AF0002C9071 /* HexagonalPortraitApp.swift */; };
 		1DCA632C25BF2AFC002C9071 /* HexagonalPortraitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCA631825BF2AF0002C9071 /* HexagonalPortraitApp.swift */; };
 		1DCA632D25BF2AFC002C9071 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCA631925BF2AF0002C9071 /* ContentView.swift */; };
@@ -43,6 +47,8 @@
 		1D53E56625C0816600B4E1BE /* Color+hex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Color+hex.swift"; sourceTree = "<group>"; };
 		1D53E56A25C0816600B4E1BE /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		1D53E56B25C0816600B4E1BE /* Nifty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nifty.swift; sourceTree = "<group>"; };
+		1D7A4DB225C1D7690007A37C /* ControlPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanel.swift; sourceTree = "<group>"; };
+		1D7A4DB925C1D9B60007A37C /* DoubleField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleField.swift; sourceTree = "<group>"; };
 		1DCA631825BF2AF0002C9071 /* HexagonalPortraitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexagonalPortraitApp.swift; sourceTree = "<group>"; };
 		1DCA631925BF2AF0002C9071 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1DCA631A25BF2AFC002C9071 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -104,6 +110,8 @@
 				1DCA631825BF2AF0002C9071 /* HexagonalPortraitApp.swift */,
 				1DCA631925BF2AF0002C9071 /* ContentView.swift */,
 				1DCA633B25BF2B27002C9071 /* PortraitView.swift */,
+				1D7A4DB225C1D7690007A37C /* ControlPanel.swift */,
+				1D7A4DB925C1D9B60007A37C /* DoubleField.swift */,
 				1DCA634025BF2BBA002C9071 /* Hexagonal */,
 				1D53E56425C0816600B4E1BE /* Tools */,
 			);
@@ -254,9 +262,11 @@
 				1DCA633C25BF2B27002C9071 /* PortraitView.swift in Sources */,
 				1D53E57625C0816600B4E1BE /* Colors.swift in Sources */,
 				1DCA634A25BF2BBA002C9071 /* Hexagon.swift in Sources */,
+				1D7A4DB325C1D7690007A37C /* ControlPanel.swift in Sources */,
 				1DCA632D25BF2AFC002C9071 /* ContentView.swift in Sources */,
 				1DCA634E25BF2BBA002C9071 /* View+hexagonalFrame.swift in Sources */,
 				1DCA634625BF2BBA002C9071 /* RoundedHexagon.swift in Sources */,
+				1D7A4DBA25C1D9B60007A37C /* DoubleField.swift in Sources */,
 				1DCA632B25BF2AFC002C9071 /* HexagonalPortraitApp.swift in Sources */,
 				1DCA634C25BF2BBA002C9071 /* Hexagon+preview.swift in Sources */,
 			);
@@ -272,10 +282,12 @@
 				1DCA633D25BF2B27002C9071 /* PortraitView.swift in Sources */,
 				1DCA634B25BF2BBA002C9071 /* Hexagon.swift in Sources */,
 				1DCA632E25BF2AFC002C9071 /* ContentView.swift in Sources */,
+				1D7A4DB425C1D7690007A37C /* ControlPanel.swift in Sources */,
 				1D53E54725C06F1E00B4E1BE /* WindowController.swift in Sources */,
 				1DCA634F25BF2BBA002C9071 /* View+hexagonalFrame.swift in Sources */,
 				1D53E55F25C07E5600B4E1BE /* VisualEffectBlur.swift in Sources */,
 				1DCA634725BF2BBA002C9071 /* RoundedHexagon.swift in Sources */,
+				1D7A4DBB25C1D9B60007A37C /* DoubleField.swift in Sources */,
 				1DCA632C25BF2AFC002C9071 /* HexagonalPortraitApp.swift in Sources */,
 				1D53E54B25C0747D00B4E1BE /* AppDelegate.swift in Sources */,
 				1DCA634D25BF2BBA002C9071 /* Hexagon+preview.swift in Sources */,
