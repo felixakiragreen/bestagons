@@ -63,6 +63,7 @@
 		1DCA634325BF2BBA002C9071 /* Hexagon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hexagon.swift; sourceTree = "<group>"; };
 		1DCA634425BF2BBA002C9071 /* Hexagon+preview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Hexagon+preview.swift"; sourceTree = "<group>"; };
 		1DCA634525BF2BBA002C9071 /* View+hexagonalFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+hexagonalFrame.swift"; sourceTree = "<group>"; };
+		1DE90B6525C76EE600A35CC3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +97,7 @@
 		1DCA631225BF2AF0002C9071 = {
 			isa = PBXGroup;
 			children = (
+				1DE90B6525C76EE600A35CC3 /* README.md */,
 				1DCA631725BF2AF0002C9071 /* Shared */,
 				1DCA632125BF2AFC002C9071 /* iOS */,
 				1DCA632825BF2AFC002C9071 /* macOS */,
