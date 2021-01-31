@@ -14,7 +14,7 @@ struct PortraitView_Previews: PreviewProvider {
 	static var previews: some View {
 		PortraitView(
 			initiallyVisible: true,
-			isReversing: .constant(false),
+			isReversing: .constant(true),
 			isLooping: .constant(true),
 			animationDuration: 2.0,
 			animationPause: 1.0
@@ -315,10 +315,10 @@ struct Background: View {
 	
 	var body: some View {
 		Hexagon(regular: true)
+			.scale(show ? 1 : 0)
 			.hexagonalFrame(height: size.height)
-			.frame(maxWidth: .infinity, maxHeight: .infinity)
+//			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.foregroundColor(Color("grey.500"))
-			.scaleEffect(show ? 1 : 0)
 	}
 }
 
@@ -405,8 +405,8 @@ struct Head: View {
 		.fractionalFrame(size: size, fraction: 12 / 24)
 		.mask(
 			Hexagon(orientation: .pointy)
+				.scale(show ? 1 : 0)
 				.hexagonalFrame(height: size.height * 12 / 24)
-				.scaleEffect(show ? 1 : 0)
 		)
 	}
 }
@@ -427,11 +427,12 @@ struct Hairline: View {
 		.mask(
 			Hexagon(orientation: .pointy)
 //				.hexagonalFrame(height: size.height * 3 / 24)
+				.scale(show ? 1 : 0)
 				.frame(
 					width: size.width * 6 / 24,
 					height: size.height * 6 / 24
 				)
-				.scaleEffect(show ? 1 : 0)
+				
 		)
 		.mask(
 			Hexagon(orientation: .pointy)
