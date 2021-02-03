@@ -14,7 +14,7 @@ struct PortraitView_Previews: PreviewProvider {
 	static var previews: some View {
 		PortraitView(
 			initiallyVisible: true,
-			isReversing: .constant(true),
+			isAnimating: .constant(true),
 			isLooping: .constant(true),
 			animationDuration: 2.0,
 			animationPause: 1.0
@@ -51,7 +51,9 @@ struct PortraitView: View {
 	
 	// MARK: - STATE
 	
-	@Binding var isReversing: Bool
+	@State var isReversing = false
+	
+	@Binding var isAnimating: Bool
 	@Binding var isLooping: Bool
 	var animationDuration: Double
 	var animationPause: Double
@@ -200,6 +202,11 @@ struct PortraitView: View {
 	// MARK: - FUNCS
 
 	private func animate() -> Void {
+		guard isAnimating else {
+			return
+				print("NOT animating")
+		}
+
 		print("ANIMATING")
 		isReversing.toggle()
 		

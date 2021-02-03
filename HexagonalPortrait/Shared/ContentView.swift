@@ -25,7 +25,7 @@ struct ContentView: View {
 	// MARK: - PROPS
 	
 	@State var showControlPanel = false
-	@State var isReversing = false
+	@State var isAnimating = false
 	@State var isLooping = true
 	@State var animationDuration = 5.0
 	@State var animationPause = 2.0
@@ -35,7 +35,7 @@ struct ContentView: View {
 		VStack {
 			if showControlPanel {
 				ControlPanel(
-					isReversing: $isReversing,
+					isAnimating: $isAnimating,
 					isLooping: $isLooping,
 					animationDuration: $animationDuration,
 					animationPause: $animationPause,
@@ -44,7 +44,7 @@ struct ContentView: View {
 			} else {
 				PortraitView(
 					initiallyVisible: true,
-					isReversing: $isReversing,
+					isAnimating: $isAnimating,
 					isLooping: $isLooping,
 					animationDuration: animationDuration,
 					animationPause: animationPause

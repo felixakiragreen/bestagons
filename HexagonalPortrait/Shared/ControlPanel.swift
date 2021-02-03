@@ -12,7 +12,7 @@ import SwiftUI
 struct ControlPanel_Previews: PreviewProvider {
 	static var previews: some View {
 		ControlPanel(
-			isReversing: .constant(false),
+			isAnimating: .constant(true),
 			isLooping: .constant(true),
 			animationDuration: .constant(2.0),
 			animationPause: .constant(1.0),
@@ -24,7 +24,7 @@ struct ControlPanel_Previews: PreviewProvider {
 struct ControlPanel: View {
 	// MARK: - PROPS
 
-	@Binding var isReversing: Bool
+	@Binding var isAnimating: Bool
 	@Binding var isLooping: Bool
 	@Binding var animationDuration: Double
 	@Binding var animationPause: Double
@@ -41,9 +41,9 @@ struct ControlPanel: View {
 				Text("control panel")
 					.font(.system(.title, design: .monospaced))
 				HStack {
-//					Toggle(isOn: $isReversing) {
-//						Text("isReversing")
-//					}
+					Toggle(isOn: $isAnimating) {
+						Text("isAnimating")
+					}
 					Toggle(isOn: $isLooping) {
 						Text("isLooping")
 					}
@@ -57,7 +57,6 @@ struct ControlPanel: View {
 					DoubleField(value: $animationPause)
 				}
 				Button("done") {
-					isReversing.toggle()
 					showControlPanel.toggle()
 				}
 			} //: LEFT
