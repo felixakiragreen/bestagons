@@ -14,21 +14,13 @@ struct ContentView_Previews: PreviewProvider {
 	}
 }
 
-
-/**
-TODO:
-- [ ] add a title & subtitle (like hexis) so I can add labels to it
-*/
-
 struct ContentView: View {
 	
 	// MARK: - PROPS
 	
 	@State var showControlPanel = false
-	@State var isAnimating = false
+	@State var isAnimating = true
 	@State var isLooping = true
-	@State var animationDuration = 5.0
-	@State var animationPause = 2.0
 
 	// MARK: - BODY
 	var body: some View {
@@ -37,17 +29,13 @@ struct ContentView: View {
 				ControlPanel(
 					isAnimating: $isAnimating,
 					isLooping: $isLooping,
-					animationDuration: $animationDuration,
-					animationPause: $animationPause,
 					showControlPanel: $showControlPanel
 				)
 			} else {
 				PortraitView(
 					initiallyVisible: true,
 					isAnimating: $isAnimating,
-					isLooping: $isLooping,
-					animationDuration: animationDuration,
-					animationPause: animationPause
+					isLooping: $isLooping
 				)
 			}
 			
@@ -61,4 +49,3 @@ struct ContentView: View {
 		}
 	}
 }
-

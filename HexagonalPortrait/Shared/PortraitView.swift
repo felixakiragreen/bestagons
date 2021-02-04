@@ -15,9 +15,7 @@ struct PortraitView_Previews: PreviewProvider {
 		PortraitView(
 			initiallyVisible: true,
 			isAnimating: .constant(true),
-			isLooping: .constant(true),
-			animationDuration: 2.0,
-			animationPause: 1.0
+			isLooping: .constant(true)
 		)
 	}
 }
@@ -30,16 +28,15 @@ struct AxP {
 
 /**
 
-
 TODO:
 - [ ] performance isn't great
-- [ ] doubleTap to flip for controls (duration, looping)
 
 DONE:
 - [x] isReversing not working
 - [x] make window transparent
 https://github.com/lukakerr/NSWindowStyles
 https://github.com/martinlexow/SwiftUIWindowStyles
+- [x] doubleTap to flip for controls (duration, looping)
 
 */
 
@@ -55,11 +52,8 @@ struct PortraitView: View {
 	
 	@Binding var isAnimating: Bool
 	@Binding var isLooping: Bool
-	var animationDuration: Double
-	var animationPause: Double
-	
-//	@State var timer: Timer.TimerPublisher = Timer.publish(every: 5, on: .main, in: .common)
-//	@State var timer: Publishers.Autoconnect<Timer.TimerPublisher>
+	@AppStorage("duration") var animationDuration: Double = 5.0
+	@AppStorage("pause") var animationPause: Double = 2.0
 	
 	@State var bgVisible = false
 	@State var bgAxP = AxP(start: 0.0, end: 0.35)

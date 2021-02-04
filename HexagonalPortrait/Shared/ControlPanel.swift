@@ -14,8 +14,6 @@ struct ControlPanel_Previews: PreviewProvider {
 		ControlPanel(
 			isAnimating: .constant(true),
 			isLooping: .constant(true),
-			animationDuration: .constant(2.0),
-			animationPause: .constant(1.0),
 			showControlPanel: .constant(true)
 		)
 	}
@@ -26,11 +24,10 @@ struct ControlPanel: View {
 
 	@Binding var isAnimating: Bool
 	@Binding var isLooping: Bool
-	@Binding var animationDuration: Double
-	@Binding var animationPause: Double
 	@Binding var showControlPanel: Bool
-
-//	let stepperUnit = 0.05
+	
+	@AppStorage("duration") var animationDuration: Double = 5.0
+	@AppStorage("pause") var animationPause: Double = 2.0
 
 	// MARK: - BODY
 
