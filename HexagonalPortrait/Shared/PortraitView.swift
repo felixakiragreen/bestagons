@@ -5,8 +5,8 @@
 //  Created by Felix Akira Green on 1/25/21.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 // MARK: - PREVIEW
 
@@ -28,17 +28,17 @@ struct AxP {
 
 /**
 
-TODO:
-- [ ] performance isn't great
+ TODO:
+ - [ ] performance isn't great
 
-DONE:
-- [x] isReversing not working
-- [x] make window transparent
-https://github.com/lukakerr/NSWindowStyles
-https://github.com/martinlexow/SwiftUIWindowStyles
-- [x] doubleTap to flip for controls (duration, looping)
+ DONE:
+ - [x] isReversing not working
+ - [x] make window transparent
+ https://github.com/lukakerr/NSWindowStyles
+ https://github.com/martinlexow/SwiftUIWindowStyles
+ - [x] doubleTap to flip for controls (duration, looping)
 
-*/
+ */
 
 struct PortraitView: View {
 	// MARK: - PROPS
@@ -54,6 +54,8 @@ struct PortraitView: View {
 	@Binding var isLooping: Bool
 	@AppStorage("duration") var animationDuration: Double = 5.0
 	@AppStorage("pause") var animationPause: Double = 2.0
+	@AppStorage("title") var overlayTitle: String = "exampleTitle"
+	@AppStorage("subtitle") var overlaySubtitle: String = "exampleSubtitle"
 	
 	@State var bgVisible = false
 	@State var bgAxP = AxP(start: 0.0, end: 0.35)
@@ -112,7 +114,6 @@ struct PortraitView: View {
 	var chestAnimation: Animation { return proportionallyDelayedAx(chestAxP) }
 	var hairAnimation: Animation { return proportionallyDelayedAx(hairAxP) }
 		
-
 	// MARK: - BODY
 	
 	var body: some View {
@@ -140,9 +141,13 @@ struct PortraitView: View {
 					}
 				}
 			
+			
+			
+			VStack {
+				Text(overlayTitle)
+					.font(.system(.title, design: .monospaced))
 				GeometryReader { geometry in
 					ZStack {
-						
 						Background(
 							size: geometry.size,
 							show: bgVisible
@@ -159,7 +164,7 @@ struct PortraitView: View {
 							show: hairVisible,
 							showShadow: shadowVisible
 						)
-
+						
 						Head(
 							size: geometry.size,
 							show: headVisible,
@@ -171,31 +176,31 @@ struct PortraitView: View {
 							show: hairVisible,
 							showShadow: shadowVisible
 						)
-					} //: ZSTACK
-//					.frame(maxWidth: .infinity, maxHeight: .infinity)
+					} //: ZStack
 					.drawingGroup()
 					.onTapGesture {
-//						if material < materials.count {
-//							material += 1
-//						} else {
-//							material = 0
-//						}
-//						print("bla", materialNames[optional: material])
-//						animate()
+						//if material < materials.count {
+						//	material += 1
+						//} else {
+						//	material = 0
+						//}
+						//print("bla", materialNames[optional: material])
+						//animate()
 					}
-				} //: RIGHT
+				} //: GeometryReader
 				.aspectRatio(1, contentMode: .fit)
-//				.frame(width: 640, height: 640)
 				.padding(24)
-//				.background(Color.black)
-//				.padding(10)
-		}
+				Text(overlaySubtitle)
+					.font(.system(.body, design: .monospaced))
+			} //: VStack
+			.padding()
 
-	}
+		} //: ZStack
+	} //: body
 	
 	// MARK: - FUNCS
 
-	private func animate() -> Void {
+	private func animate() {
 		guard isAnimating else {
 			return
 				print("NOT animating")
@@ -263,7 +268,7 @@ struct ShadowAnimatedBlur: View {
 		HStack(spacing: 0.0) {
 			Color.white
 			Color.black
-		}//: HSTACK
+		} //: HSTACK
 //		.blur(radius: show ? 0.0 : 100.0)
 		.opacity(0.12)
 		.blendMode(blend)
@@ -433,7 +438,6 @@ struct Hairline: View {
 					width: size.width * 6 / 24,
 					height: size.height * 6 / 24
 				)
-				
 		)
 		.mask(
 			Hexagon(orientation: .pointy)
@@ -443,4 +447,3 @@ struct Hairline: View {
 		//		.opacity(show ? 1 : 0)
 	}
 }
-

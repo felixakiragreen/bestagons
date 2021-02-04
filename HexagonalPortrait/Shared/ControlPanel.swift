@@ -28,6 +28,8 @@ struct ControlPanel: View {
 	
 	@AppStorage("duration") var animationDuration: Double = 5.0
 	@AppStorage("pause") var animationPause: Double = 2.0
+	@AppStorage("title") var overlayTitle: String = ""
+	@AppStorage("subtitle") var overlaySubtitle: String = ""
 
 	// MARK: - BODY
 
@@ -53,10 +55,18 @@ struct ControlPanel: View {
 					Text("pause")
 					DoubleField(value: $animationPause)
 				}
+				HStack {
+					Text("title")
+					TextField("title", text: $overlayTitle)
+				}
+				HStack {
+					Text("subtitle")
+					TextField("subtitle", text: $overlaySubtitle)
+				}
 				Button("done") {
 					showControlPanel.toggle()
 				}
-			} //: LEFT
+			} //: VStack
 			.padding(.horizontal, 16.0)
 		}
 		.font(.system(.body, design: .monospaced))
