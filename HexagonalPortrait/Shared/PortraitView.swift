@@ -17,6 +17,7 @@ struct PortraitView_Previews: PreviewProvider {
 			isAnimating: .constant(true),
 			isLooping: .constant(true)
 		)
+		.previewLayout(.sizeThatFits)
 	}
 }
 

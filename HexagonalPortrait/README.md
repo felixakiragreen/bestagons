@@ -2,6 +2,10 @@
 
 ## TODO
 - [ ] don't open 2 windows (one transparent, one not transparent)
+- [ ] save presets?
+	- use cases:
+		- EVERYDAY FUI, date, 270 / 30
+		- junkDrawer, v#,  29 / 1
 
 ## CHANGELOG
 
